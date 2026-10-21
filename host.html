@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="來電送 - 團購主管理後台。設定團購、展示專屬代碼、即時訂單品項明細、廚房備餐統計與開放領餐收款核對。">
+  <title>主辦人管理後台｜來電送 - 店內價，一起訂更便宜</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-host">
+
+  <!-- 頂部導航列 -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-logo" aria-label="返回來電送首頁">
+        <span class="logo-badge">主辦人後台</span>
+        <span class="logo-title">來電送</span>
+      </a>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-ghost header-back-btn">← 返回首頁</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="host-main">
+    <div class="container">
+
+      <!-- ================= 狀態 A：未開團乾淨表單（預設顯示） ================= -->
+      <section id="section-create-group" class="host-create-card card-box" aria-labelledby="create-heading" style="display: block;">
+        <div class="create-card-header">
+          <span class="status-pill">步驟 1 / 2</span>
+          <h1 id="create-heading" class="create-title">發起今日團購</h1>
+          <p class="create-desc">請填寫合作店家、截止時間與取餐資訊。點擊「開始揪團」後將生成專屬 4 碼代碼並解鎖管理看板。</p>
+        </div>
+
+        <form id="form-create-group" class="host-form" novalidate>
+          
+          <!-- 商家選擇 -->
+          <div class="form-group">
+            <label for="select-store" class="form-label">
+              選擇合作店家 <span class="required-star">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="select-store" class="form-control form-select" required>
+                <option value="" disabled selected>-- 請選擇今日合作店家 --</option>
+                <option value="西門町排骨大王">西門町排骨大王（精緻台式便當・滿 10 份免外送費）</option>
+                <option value="賽門古早味甜不辣">賽門古早味甜不辣（萬華老字號・滿 500 元送炸雞卷）</option>
+                <option value="艋舺阿龍極品炒飯">艋舺阿龍極品炒飯（大火鑊氣炒飯・滿 12 份 9 折）</option>
+              </select>
+            </div>
+            <span class="field-hint">嚴選西門町與萬華在地人氣名店，享店內價自送服務</span>
+          </div>
+
+          <!-- 截止時間與召集人姓名 -->
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="input-deadline" class="form-label">
+                收單截止時間 <span class="required-star">*</span>
+              </label>
+              <input 
+                type="time" 
+                id="input-deadline" 
+                class="form-control" 
+                placeholder="--:--" 
+                required
+              >
+              <span class="field-hint">時間一到自動鎖單，便於準時向店家送單</span>
+            </div>
+
+            <!-- 召集人真實姓名 -->
+            <div class="form-group">
+              <label for="input-host-name" class="form-label">
+                召集人姓名 <span class="required-star">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="input-host-name" 
+                class="form-control" 
+                placeholder="例：王小明" 
+                maxlength="15" 
+                required
+              >
+              <span class="field-hint">主辦人對店家實名，團員對主辦人維持匿名</span>
+            </div>
+          </div>
+
+          <!-- 聯絡電話與送餐地點 -->
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="input-host-phone" class="form-label">
+                主辦人聯絡電話 <span class="required-star">*</span>
+              </label>
+              <input 
+                type="tel" 
+                id="input-host-phone" 
+                class="form-control" 
+                placeholder="例：0912345678" 
+                pattern="^09\d{8}$" 
+                maxlength="10" 
+                required
+              >
+              <span class="field-hint">格式為 10 碼手機號碼，外送員抵達時撥打使用</span>
+            </div>
+
+            <div class="form-group">
+              <label for="input-pickup-location" class="form-label">
+                送餐地點 / 取餐處 <span class="required-star">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="input-pickup-location" 
+                class="form-control" 
+                placeholder="例：台北市萬華區內江街19號（3F大廳）" 
+                maxlength="60" 
+                required
+              >
+              <span class="field-hint">標記於團員點餐頁面與外送單據上的取餐位置</span>
+            </div>
+          </div>
+
+          <!-- 錯誤提示訊息區 -->
+          <div id="create-error-msg" class="error-message" role="alert" style="display: none;"></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-large btn-block" id="btn-submit-create">
+              🚀 開始揪團（建立團購並產生代碼）
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ================= 狀態 B：開團後管理總表儀表板 ================= -->
+      <div id="section-host-dashboard" class="host-dashboard" style="display: none;">
+
+        <!-- 餐點狀態時間軸卡片 (Order Status Timeline) -->
+        <section class="card-box timeline-status-card" aria-label="餐點進度時間軸">
+          <div class="timeline-header-row">
+            <div class="timeline-headline-wrap">
+              <span class="status-indicator-dot" id="timeline-pulse-dot"></span>
+              <div class="timeline-text-group">
+                <span class="timeline-caption">目前餐點進度</span>
+                <h2 class="timeline-main-title" id="timeline-status-title">餐點狀態：點餐收單中</h2>
+              </div>
+            </div>
+            <div class="timeline-hint-box" id="timeline-status-desc">
+              目前團員可自由填單，時間截止前主辦人可隨時送單至店家。
+            </div>
+          </div>
+
+          <!-- 時間軸軌道主體 -->
+          <div class="timeline-track-wrap">
+            <div class="timeline-progress-rail">
+              <div class="timeline-progress-bar" id="timeline-fill-bar" style="width: 12%;"></div>
+            </div>
+
+            <div class="timeline-nodes-row">
+              <div class="timeline-node current" id="node-stage-1">
+                <div class="node-icon-bubble">🥢</div>
+                <div class="node-meta">
+                  <span class="node-time" id="time-stamp-1">11:00</span>
+                  <strong class="node-title">發起收單</strong>
+                  <span class="node-pill pill-active" id="pill-stage-1">進行中</span>
+                </div>
+              </div>
+
+              <div class="timeline-node pending" id="node-stage-2">
+                <div class="node-icon-bubble">🔒</div>
+                <div class="node-meta">
+                  <span class="node-time" id="time-stamp-2">預計 11:30</span>
+                  <strong class="node-title">截止鎖單</strong>
+                  <span class="node-pill pill-pending" id="pill-stage-2">等待中</span>
+                </div>
+              </div>
+
+              <div class="timeline-node pending" id="node-stage-3">
+                <div class="node-icon-bubble">🍳</div>
+                <div class="node-meta">
+                  <span class="node-time" id="time-stamp-3">--:--</span>
+                  <strong class="node-title">廚房製作</strong>
+                  <span class="node-pill pill-pending" id="pill-stage-3">等待中</span>
+                </div>
+              </div>
+
+              <div class="timeline-node pending" id="node-stage-4">
+                <div class="node-icon-bubble">🛵</div>
+                <div class="node-meta">
+                  <span class="node-time" id="time-stamp-4">--:--</span>
+                  <strong class="node-title">外送抵達</strong>
+                  <span class="node-pill pill-pending" id="pill-stage-4">等待中</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 代碼與分享列 -->
+          <div class="code-share-bar">
+            <div class="code-display-block">
+              <span class="code-label">今日團購代碼：</span>
+              <div class="code-boxes-wrap" title="點擊直接複製代碼" id="code-copy-trigger">
+                <span class="code-box" id="code-char-1">-</span>
+                <span class="code-box" id="code-char-2">-</span>
+                <span class="code-box" id="code-char-3">-</span>
+                <span class="code-box" id="code-char-4">-</span>
+              </div>
+            </div>
+            <div class="share-actions-group">
+              <button type="button" class="btn btn-secondary btn-share-link" id="btn-copy-group-link">
+                📋 複製揪團連結
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-edit-group-info">
+                ✏️ 修改開團資訊
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm btn-reset-group" id="btn-reset-group-top" title="結束本次團購並返回未開團狀態">
+                🔄 重新開團
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 基本資訊與滿額階梯進度 -->
+        <section class="meta-progress-grid">
+          <div class="card-box meta-summary-card">
+            <h2 class="card-subheading">團購基本資訊</h2>
+            <ul class="meta-list">
+              <li>
+                <span class="meta-label">合作店家：</span>
+                <strong class="meta-val" id="dash-store-name">--</strong>
+              </li>
+              <li>
+                <span class="meta-label">收單截止：</span>
+                <span class="meta-val deadline-highlight" id="dash-deadline">--:--</span>
+              </li>
+              <li>
+                <span class="meta-label">召集人：</span>
+                <span class="meta-val" id="dash-host-info">--</span>
+              </li>
+              <li>
+                <span class="meta-label">送餐地點：</span>
+                <span class="meta-val" id="dash-pickup-loc">--</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card-box tier-progress-card">
+            <div class="tier-card-header">
+              <h2 class="card-subheading">🎯 湊單進度（階梯優惠）</h2>
+              <span class="tier-badge" id="dash-tier-badge">差 10 份達標</span>
+            </div>
+            <p class="tier-condition-desc" id="dash-tier-text">
+              目前已訂 <strong>0 份</strong>，再訂 <strong>10 份</strong> 即贈「店家招牌冰紅茶」！
+            </p>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="dash-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="tier-targets-row">
+              <span class="target-node">起送門檻 (5份)</span>
+              <span class="target-node active">🎯 送招牌紅茶 (10份)</span>
+              <span class="target-node">⭐️ 全單 9 折 (20份)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- KPI 數據統計卡（不參加純統計人數不記名） -->
+        <section class="kpi-cards-grid" aria-label="訂單數據快速統計">
+          <div class="kpi-card">
+            <span class="kpi-title">目前累計金額</span>
+            <div class="kpi-value-row">
+              <span class="kpi-unit">NT$</span>
+              <strong class="kpi-number" id="kpi-total-amount">0</strong>
+            </div>
+            <span class="kpi-sub">主辦人實收金額（現金）</span>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-title">點餐總份數</span>
+            <div class="kpi-value-row">
+              <strong class="kpi-number" id="kpi-total-count">0</strong>
+              <span class="kpi-unit">份</span>
+            </div>
+            <span class="kpi-sub">已登記出餐餐點量</span>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-title">今日不參加</span>
+            <div class="kpi-value-row">
+              <strong class="kpi-number" id="kpi-skip-count">0</strong>
+              <span class="kpi-unit">人</span>
+            </div>
+            <span class="kpi-sub">完全不記名・僅統計已回覆人數</span>
+          </div>
+        </section>
+
+        <!-- 訂單管理分頁主體（保護隱私：團主端不顯示任何備註） -->
+        <section class="orders-management-card card-box" aria-labelledby="orders-heading">
+          <div class="orders-nav-header">
+            <div class="nav-tabs-wrapper" role="tablist">
+              <button type="button" class="order-tab-btn active" id="tab-btn-breakdown" role="tab" aria-selected="true" data-tab="tab-breakdown">
+                📋 團員訂單明細 (<span id="tab-count-breakdown">0</span>)
+              </button>
+              <button type="button" class="order-tab-btn" id="tab-btn-kitchen" role="tab" aria-selected="false" data-tab="tab-kitchen">
+                🍳 廚房備餐彙總 (<span id="tab-count-kitchen">0 品項</span>)
+              </button>
+            </div>
+            
+            <div class="orders-filter-summary">
+              <span class="filter-caption" id="tab-active-caption">僅顯示取餐編號與餐點品項，備註由店家直接核對</span>
+            </div>
+          </div>
+
+          <!-- 分頁 1：訂單明細表格（僅顯示 取餐編號、餐點品項、金額、收款狀態） -->
+          <div class="tab-pane active" id="pane-tab-breakdown" role="tabpanel">
+
+            <!-- 現場現金收款進度看板（外送抵達開放領餐後自動浮現） -->
+            <div class="payment-collection-banner" id="payment-collection-banner" style="display: none;">
+              <div class="payment-banner-content">
+                <div class="payment-banner-title-row">
+                  <span class="payment-badge">💵 現場收款核對中</span>
+                  <div class="payment-summary-stat">
+                    已收：<strong class="paid-amount-val" id="banner-paid-amount">NT$ 0</strong> /
+                    應收 <span id="banner-total-amount">NT$ 0</span>
+                    （已收款 <span id="banner-paid-count">0</span> / <span id="banner-total-orders">0</span> 筆）
+                  </div>
+                </div>
+                <p class="payment-guide-hint">
+                  餐點已抵達！請核對團員取餐編號交付便當，收取現金後<strong>勾選下方核取方塊</strong>記錄收款進度。
+                </p>
+                <div class="payment-progress-bar-bg">
+                  <div class="payment-progress-bar-fill" id="payment-progress-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+              <div class="payment-banner-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-toggle-all-paid">
+                  ✓ 一鍵全選已收款
+                </button>
+              </div>
+            </div>
+
+            <!-- 明細表格（無備註欄位） -->
+            <div class="table-responsive">
+              <table class="data-table" id="orders-breakdown-table">
+                <thead id="orders-thead">
+                  <!-- JS 動態渲染表頭（無備註欄） -->
+                </thead>
+                <tbody id="orders-tbody">
+                  <!-- 初始空白狀態由 JS 渲染 -->
+                </tbody>
+                <tfoot id="orders-tfoot">
+                  <!-- JS 動態渲染加總 -->
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- 分頁 2：廚房備餐彙總表格（僅顯示 品項 與 總份數，彙總只有數量） -->
+          <div class="tab-pane" id="pane-tab-kitchen" role="tabpanel" style="display: none;">
+            <div class="kitchen-header-tip">
+              <span>💡 <strong>廚房備餐視圖：</strong>彙總只有數量，一鍵掌握各品項總數，送單交給店家免拿紙筆手算。</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="kitchen-summary-table">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width: 70%;">餐點品項</th>
+                    <th scope="col" style="width: 30%;" class="text-center">備餐總份數</th>
+                  </tr>
+                </thead>
+                <tbody id="kitchen-tbody">
+                  <!-- JS 動態渲染 -->
+                </tbody>
+                <tfoot>
+                  <tr class="table-summary-row">
+                    <td class="text-left font-bold">出餐總件數</td>
+                    <td class="text-center font-bold total-highlight" id="kitchen-total-count">共 0 份餐點</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 底端操作與送單至商家控制區 -->
+        <section class="host-bottom-actions card-box">
+          <div class="bottom-actions-meta">
+            <span class="meta-label">訂單流程推進：</span>
+            <span class="meta-desc" id="status-action-hint">點擊「送單至商家」後，系統將鎖定點餐並通知商家進入廚房備餐製作。</span>
+          </div>
+          <div class="bottom-buttons-cluster">
+            <button type="button" class="btn btn-ghost" id="btn-toggle-lock-order">
+              🔒 提早截止（鎖定收單）
+            </button>
+            <button type="button" class="btn btn-primary btn-large" id="btn-submit-to-merchant">
+              🚀 送單至商家（確認製作）
+            </button>
+            <button type="button" class="btn btn-success" id="btn-mark-delivered" style="display: none;">
+              🛵 外送已抵達（開放領餐）
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 修改開團基本資訊彈窗 (Modal) -->
+  <div class="modal-overlay" id="edit-info-modal" aria-hidden="true" role="dialog" aria-labelledby="edit-modal-title">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="btn-close-edit-modal" aria-label="關閉視窗">&times;</button>
+      <div class="modal-header">
+        <h3 id="edit-modal-title" class="modal-title">修改開團基本資訊</h3>
+      </div>
+      <form id="form-edit-group" class="edit-group-form">
+        <div class="form-group">
+          <label for="edit-deadline" class="form-label">收單截止時間</label>
+          <input type="time" id="edit-deadline" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-location" class="form-label">送餐地點 / 取餐處</label>
+          <input type="text" id="edit-location" class="form-control" maxlength="60" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-phone" class="form-label">聯絡電話</label>
+          <input type="tel" id="edit-phone" class="form-control" pattern="^09\d{8}$" maxlength="10" required>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary btn-block">儲存更新</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast 快速提示通知條 -->
+  <div id="host-toast" class="toast-notification" role="status" aria-live="polite"></div>
+
+  <!-- 頁尾 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <span class="footer-title">來電送</span>
+        <span class="footer-dot">・</span>
+        <span>團體訂餐公益平台</span>
+      </div>
+      <p class="footer-copyright">
+        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 原型展示・主辦人對店家實名・團員對主辦人匿名
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/host.js"></script>
+</body>
+</html>

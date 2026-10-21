@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="來電送 - 團購點餐。輸入團購代碼，免註冊匿名點餐，送單後提供取餐號碼、應付金額與餐點明細。">
+  <title>團購點餐｜來電送 - 店內價，一起訂更便宜</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-member">
+
+  <!-- 頂部導航列 -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-logo" aria-label="返回來電送首頁">
+        <span class="logo-badge">團購</span>
+        <span class="logo-title">來電送</span>
+      </a>
+      <div class="header-actions">
+        <a href="index.html" class="header-back-btn">← 返回首頁</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="member-main">
+    <div class="container">
+
+      <!-- ================= 階段 1：輸入團購代碼（未驗證前顯示） ================= -->
+      <section id="step-code-section" class="member-section enter-code-card" aria-labelledby="code-heading">
+        <div class="code-card-header">
+          <span class="status-pill">步驟 1 / 4</span>
+          <h1 id="code-heading" class="code-title">加入今日揪團</h1>
+          <p class="code-desc">請輸入主辦人分享的 4 位英數團購代碼（例：<code>8825</code> 或 <code>A888</code>）</p>
+        </div>
+
+        <form id="form-verify-code" class="code-form" novalidate>
+          <div class="code-input-container">
+            <input 
+              type="text" 
+              id="input-member-code" 
+              class="code-input-field" 
+              placeholder="請輸入代碼" 
+              maxlength="6" 
+              autocomplete="off" 
+              value="8825"
+              required
+            >
+          </div>
+          <div id="code-error" class="error-message" role="alert" style="display: none;"></div>
+
+          <div class="code-form-actions">
+            <button type="submit" class="btn btn-primary btn-large btn-block" id="btn-submit-verify">
+              驗證代碼並進入菜單
+            </button>
+          </div>
+        </form>
+
+        <div class="demo-tip-banner">
+          <span class="tip-icon">💡</span>
+          <span><strong>前端示範環境：</strong>系統已預填示範代碼 <code>8825</code>，點擊按鈕即可立即載入「西門町排骨大王」示範菜單。</span>
+        </div>
+      </section>
+
+      <!-- ================= 階段 2~6：團購資訊看板與選餐流程（驗證後解鎖） ================= -->
+      <div id="order-flow-wrapper" style="display: none;">
+        
+        <!-- 團購資訊頂部看板 -->
+        <section class="group-info-card" aria-label="團購即時狀態">
+          <div class="group-info-main">
+            <div class="group-store-meta">
+              <span class="badge-store">今日合作店家</span>
+              <h1 class="store-name" id="display-store-name">載入中...</h1>
+              <p class="host-info">
+                主辦人：<strong id="display-host-name">--</strong>
+                <span class="separator">｜</span>
+                取餐地點：<span id="display-pickup-location">--</span>
+              </p>
+            </div>
+            <div class="group-status-meta">
+              <div class="status-time-box">
+                <span class="status-dot"></span>
+                <span class="status-text">點餐收單中</span>
+                <span class="deadline-tag" id="display-deadline">截止時間：--:--</span>
+              </div>
+              <div class="current-code-badge">
+                團購代碼：<strong id="display-group-code">----</strong>
+                <button type="button" class="btn-text-action" id="btn-change-code" title="切換其他團購代碼">更換</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 湊單階梯進度條 -->
+          <div class="group-progress-box">
+            <div class="progress-labels">
+              <span class="progress-title">🎯 階梯滿額優惠進度</span>
+              <span class="progress-hint" id="display-progress-hint">目前已訂 0 份</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- 「今日不參加 / 這次跳過」友善橫幅 -->
+          <div class="skip-today-banner" id="skip-today-banner">
+            <div class="skip-banner-content">
+              <span class="skip-icon" aria-hidden="true">🍱</span>
+              <div class="skip-texts">
+                <strong>今天自備便當或不餓嗎？</strong>
+                <p>在來電送，「這次跳過」也是正常選項！登記後主辦人就不會一直等候或追問你喔。</p>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-skip" id="btn-open-skip-modal">
+              今日不參加（這次跳過）
+            </button>
+          </div>
+        </section>
+
+        <!-- ================= 狀態展示 A：「今日不參加」登記成功看板 ================= -->
+        <section class="inpage-status-card skip-status-card" id="skip-status-card" style="display: none;" aria-live="polite">
+          <div class="inpage-status-icon">🌱</div>
+          <span class="status-pill pill-warm">已登記：本次跳過</span>
+          <h2 class="inpage-status-title">今日不參加揪團</h2>
+          <p class="inpage-status-desc">
+            您已登記跳過今日點餐。主辦人總表會註記您已回覆，不需有任何心理負擔！
+          </p>
+          <div class="inpage-status-meta" id="skip-status-meta"></div>
+          <div class="inpage-status-actions">
+            <button type="button" class="btn btn-primary" id="btn-revert-to-order">
+              我想改為參加點餐
+            </button>
+            <a href="index.html" class="btn btn-ghost">返回首頁</a>
+          </div>
+        </section>
+
+        <!-- ================= 狀態展示 B：【核心修改】「送出訂單後」狀態看板（與今日不參加同型） ================= -->
+        <section class="inpage-status-card order-success-card" id="order-success-card" style="display: none;" aria-live="polite">
+          <div class="inpage-status-icon success-icon">🎉</div>
+          <span class="status-pill pill-success">點餐成功・已匿名登記</span>
+          <h2 class="inpage-status-title">個人訂單已成功送出！</h2>
+          <p class="inpage-status-desc">
+            您的餐點已匿名彙總至主辦人總單中。餐盒送達時外盒只標記取餐號碼、不寫個人姓名，請妥善保留本憑證！
+          </p>
+
+          <!-- 號碼牌、應付金額與明細核心資訊盒 -->
+          <div class="order-receipt-box">
+            <!-- 1. 醒目取餐號碼 -->
+            <div class="order-pickup-banner">
+              <span class="pickup-label">您的專屬取餐號碼</span>
+              <div class="pickup-number-giant" id="receipt-pickup-number">A03</div>
+              <span class="pickup-note">※ 領餐時向主辦人核對此號碼即可</span>
+            </div>
+
+            <!-- 2. 應付金額 -->
+            <div class="order-amount-strip">
+              <div class="amount-text-wrap">
+                <span class="amount-main-title">個人應付金額</span>
+                <span class="amount-sub-hint">現場交付現金・平台不碰金流</span>
+              </div>
+              <div class="amount-price-val" id="receipt-total-amount">NT$ 0</div>
+            </div>
+
+            <!-- 3. 餐點明細表格 -->
+            <div class="order-details-wrapper">
+              <div class="details-bar">
+                <span class="details-bar-title">餐點明細</span>
+                <span class="details-bar-user" id="receipt-member-label">身分：匿名團員</span>
+              </div>
+              <table class="receipt-table" id="receipt-table">
+                <thead>
+                  <tr>
+                    <th scope="col">品項與規格備註</th>
+                    <th scope="col" class="text-center">數量</th>
+                    <th scope="col" class="text-right">小計</th>
+                  </tr>
+                </thead>
+                <tbody id="receipt-items-tbody"></tbody>
+              </table>
+            </div>
+
+            <!-- 4. 輔助備註資訊 -->
+            <div class="order-meta-footer">
+              <p>📍 <strong>取餐地點：</strong><span id="receipt-pickup-loc">--</span></p>
+              <p>🕒 <strong>送單時間：</strong><span id="receipt-order-time">--</span></p>
+              <p>💡 <strong>領餐提醒：</strong>請自備零錢於餐點送達時向主辦人結清。</p>
+            </div>
+          </div>
+
+          <!-- 操作按鈕組 -->
+          <div class="inpage-status-actions">
+            <button type="button" class="btn btn-outline" id="btn-copy-order-info">
+              📋 複製取餐號碼與明細
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-revert-from-order">
+              我想繼續加點 / 重新點餐
+            </button>
+            <a href="index.html" class="btn btn-ghost">返回首頁</a>
+          </div>
+        </section>
+
+        <!-- 點餐主體雙欄佈局（左：菜單，右：購物車） -->
+        <div class="order-layout-grid" id="order-layout-grid">
+          
+          <!-- 階段 3：餐點列表與分類 -->
+          <section class="menu-section" aria-labelledby="menu-heading">
+            <div class="menu-header-bar">
+              <h2 id="menu-heading" class="section-heading">選購餐點</h2>
+              <div class="category-tabs" role="tablist" aria-label="餐點分類">
+                <button type="button" class="tab-btn active" data-category="all">全部餐點</button>
+                <button type="button" class="tab-btn" data-category="bento">精緻便當</button>
+                <button type="button" class="tab-btn" data-category="snack">招牌單點</button>
+                <button type="button" class="tab-btn" data-category="drink">冰飲湯品</button>
+              </div>
+            </div>
+
+            <!-- 餐點卡片網格 -->
+            <div class="dishes-grid" id="dishes-container"></div>
+          </section>
+
+          <!-- 階段 6：匿名個人購物車 -->
+          <aside class="cart-sidebar" id="cart-sidebar" aria-labelledby="cart-heading">
+            <div class="cart-card">
+              <div class="cart-header">
+                <div class="cart-title-wrap">
+                  <span class="cart-icon" aria-hidden="true">🛒</span>
+                  <h2 id="cart-heading" class="cart-title">個人點餐清單</h2>
+                </div>
+                <button type="button" class="btn-text-action" id="btn-clear-cart" style="display: none;">清空</button>
+              </div>
+
+              <!-- 匿名點餐保障說明 -->
+              <div class="anonymous-alert">
+                <span class="alert-icon">🔒</span>
+                <p><strong>匿名點餐保障：</strong>送單後自動獲取專屬「取餐號碼」。餐盒外盒只寫號碼不寫名字，無社交壓力。</p>
+              </div>
+
+              <!-- 購物車項目清單 -->
+              <div class="cart-items-list" id="cart-items-container">
+                <div class="cart-empty-placeholder">
+                  <span class="empty-icon">🥢</span>
+                  <p class="empty-text">購物車目前是空的</p>
+                  <p class="empty-sub">點擊餐點的「選擇規格」開始點餐吧！</p>
+                  
+                  <div class="cart-skip-shortcut">
+                    <span>或者</span>
+                    <button type="button" class="btn-link-skip" id="btn-cart-skip-link">今天不訂了？登記「這次跳過」</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 購物車結算區 -->
+              <div class="cart-footer" id="cart-footer" style="display: none;">
+                <div class="cart-summary-line">
+                  <span>品項數量</span>
+                  <span id="cart-total-qty">0 份</span>
+                </div>
+                <div class="cart-summary-line total-price-line">
+                  <span>應付金額小計</span>
+                  <span class="total-price" id="cart-total-price">NT$ 0</span>
+                </div>
+
+                <!-- 暱稱輸入（選填） -->
+                <div class="cart-nickname-group">
+                  <label for="input-nickname" class="nickname-label">取餐外盒暱稱 / 代號（選填）</label>
+                  <input 
+                    type="text" 
+                    id="input-nickname" 
+                    class="form-control" 
+                    placeholder="不填預設為匿名（例：7F企劃、Amy）" 
+                    maxlength="15"
+                  >
+                  <span class="nickname-hint">不需真實姓名，送達時核對號碼牌取餐即可</span>
+                </div>
+
+                <!-- 階段 7 送出按鈕 -->
+                <button type="button" class="btn btn-secondary btn-block btn-large" id="btn-submit-order">
+                  送出訂單並領取號碼牌
+                </button>
+                <p class="payment-notice">
+                  ※ 平台不碰金流，餐點送達時請將現金直接交給主辦人。
+                </p>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 行動端底部常駐購物車條 -->
+  <div class="mobile-cart-bar" id="mobile-cart-bar" style="display: none;">
+    <div class="mobile-cart-info" id="btn-toggle-mobile-cart">
+      <div class="mobile-cart-badge-wrap">
+        <span class="mobile-cart-icon">🛒</span>
+        <span class="mobile-badge" id="mobile-badge-count">0</span>
+      </div>
+      <div class="mobile-price-wrap">
+        <span class="mobile-price-label">應付小計</span>
+        <span class="mobile-price-val" id="mobile-price-val">NT$ 0</span>
+      </div>
+    </div>
+    <button type="button" class="btn btn-secondary" id="btn-mobile-checkout">查看清單 / 送單</button>
+  </div>
+
+  <!-- ================= 規格選擇彈窗 (Modal) ================= -->
+  <div class="modal-overlay" id="dish-modal" aria-hidden="true" role="dialog" aria-labelledby="modal-dish-title">
+    <div class="modal-box modal-box--dish">
+      <button type="button" class="modal-close" id="btn-close-dish-modal" aria-label="關閉視窗">&times;</button>
+      
+      <div class="dish-modal-header">
+        <h3 id="modal-dish-title" class="dish-modal-title">餐點名稱</h3>
+        <p class="dish-modal-price" id="modal-dish-base-price">NT$ 0</p>
+        <p class="dish-modal-desc" id="modal-dish-desc">餐點詳細說明</p>
+      </div>
+
+      <form id="form-dish-options" class="dish-options-form">
+        <div id="modal-options-container" class="options-container"></div>
+
+        <div class="form-group remark-group">
+          <label for="input-dish-remark" class="form-label">
+            個人飲食備註（選填）
+          </label>
+          <input 
+            type="text" 
+            id="input-dish-remark" 
+            class="form-control" 
+            placeholder="例：醬汁分開包、少飯、不加芹菜" 
+            maxlength="40"
+          >
+        </div>
+
+        <div class="dish-quantity-row">
+          <span class="qty-label">購買數量</span>
+          <div class="stepper-box">
+            <button type="button" class="stepper-btn" id="btn-qty-minus" aria-label="減少一份">-</button>
+            <input type="number" id="input-dish-qty" class="stepper-input" value="1" min="1" max="99" readonly>
+            <button type="button" class="stepper-btn" id="btn-qty-plus" aria-label="增加一份">+</button>
+          </div>
+        </div>
+
+        <div class="modal-dish-actions">
+          <button type="submit" class="btn btn-primary btn-block btn-large" id="btn-confirm-add-cart">
+            加入清單・NT$ <span id="modal-current-calc-price">0</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 團員端跳過彈窗：純統計、完全不記名 -->
+  <div class="modal-overlay" id="skip-modal" aria-hidden="true" role="dialog" aria-labelledby="skip-modal-title">
+    <div class="modal-box text-center">
+      <button type="button" class="modal-close" id="btn-close-skip-modal" aria-label="關閉視窗">&times;</button>
+      
+      <div class="modal-header">
+        <span class="modal-badge badge-accent">本次跳過</span>
+        <h3 id="skip-modal-title" class="modal-title">今日不參加揪團</h3>
+        <p class="modal-subtitle">完全不記名・僅計入人數統計通知主辦人</p>
+      </div>
+
+      <div class="modal-body-content">
+        <p class="skip-dialog-desc">
+          「這次跳過」是普通選項。登記後系統只會將「不參加人數 +1」，<strong>完全不會記錄您的姓名或任何個資</strong>，主辦人不用再私訊問您，也沒有社交壓力[cite: 1, 2]。
+        </p>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary btn-block" id="btn-confirm-skip">
+          確認今日不參加（不記名登記）
+        </button>
+        <button type="button" class="btn btn-ghost btn-block" id="btn-cancel-skip">
+          返回繼續看菜單
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 頁尾 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <span class="footer-title">來電送</span>
+        <span class="footer-dot">・</span>
+        <span>團體訂餐公益平台</span>
+      </div>
+      <p class="footer-copyright">
+        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 原型展示・店內價・不碰金流
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/member.js"></script>
+</body>
+</html>

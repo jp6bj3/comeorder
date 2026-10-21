@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="來電送 - 團購點餐公益平台。店內價，一起訂更便宜。提供團員跟團、主辦人開團與店家接單的便捷服務。">
+  <title>來電送｜店內價，一起訂更便宜</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-home">
+
+  <!-- 頂部品牌導航列 -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-logo" aria-label="來電送 首頁">
+        <span class="logo-badge">團購</span>
+        <span class="logo-title">來電送</span>
+      </a>
+      <span class="header-tagline">西門町試行・團體訂餐公益平台</span>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 主視覺區塊 (Hero Section) -->
+    <section class="hero-section">
+      <div class="container hero-container">
+        <h1 class="hero-title">來電送</h1>
+        <p class="hero-slogan">店內價，一起訂更便宜。</p>
+        <p class="hero-instruction">選擇您使用的身分，開始使用服務</p>
+      </div>
+    </section>
+
+    <!-- 三種身分選擇區域 (Roles Section) -->
+    <section class="roles-section" aria-labelledby="roles-heading">
+      <div class="container">
+        <h2 id="roles-heading" class="sr-only">選擇使用者身分</h2>
+        
+        <div class="roles-grid">
+          
+          <!-- 身分 1：團購團員（點擊開啟 4 碼輸入彈窗，亦可作為連結備援） -->
+          <article class="role-card" id="card-member">
+            <div class="card-image-wrap">
+              <img 
+                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" 
+                alt="多樣精緻便當與健康餐點" 
+                class="card-image"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              >
+              <div class="image-fallback fallback-member" style="display: none;" aria-hidden="true">
+                <span>🍱</span>
+              </div>
+              <span class="card-badge">團友專用</span>
+            </div>
+            <div class="card-content">
+              <div class="role-header">
+                <span class="role-icon" aria-hidden="true">🥢</span>
+                <h3 class="role-title">我是團購團員</h3>
+              </div>
+              <p class="role-desc">輸入主辦人分享的 4 碼團購代碼，匿名點餐、隨心自訂甜度冰塊，享受美味店內價。</p>
+              <ul class="role-features">
+                <li>免註冊帳號，代碼即入團</li>
+                <li>全匿名點餐，送單領取取餐號碼牌</li>
+                <li>提供「今日不參加」無壓力普通選項</li>
+              </ul>
+              <a 
+                href="member.html" 
+                class="btn btn-primary" 
+                id="btn-open-member-modal" 
+                data-open-modal="member-modal"
+              >
+                我要跟團（輸入代碼）
+              </a>
+            </div>
+          </article>
+
+          <!-- 身分 2：團購主（直連 host.html） -->
+          <article class="role-card featured-host-card" id="card-host">
+            <div class="card-image-wrap">
+              <img 
+                src="https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=800&q=80" 
+                alt="熱心主辦人手持清單發送熱騰騰餐點" 
+                class="card-image"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              >
+              <div class="image-fallback fallback-host" style="display: none;" aria-hidden="true">
+                <span>📋</span>
+              </div>
+              <span class="card-badge badge-accent">主辦開團</span>
+            </div>
+            <div class="card-content">
+              <div class="role-header">
+                <span class="role-icon" aria-hidden="true">📢</span>
+                <h3 class="role-title">我是團購主</h3>
+              </div>
+              <p class="role-desc">一鍵快速開團、選擇合作餐廳，輕鬆掌握湊單進度。彙總清單無繁雜名單，省時不漏單。</p>
+              <ul class="role-features">
+                <li>設定截止時間與自訂送餐地點</li>
+                <li>一鍵複製總單給店家，免收付手續費</li>
+                <li>自動掌握「已回覆跳過」名單不用等</li>
+              </ul>
+              <a 
+                href="host.html" 
+                class="btn btn-secondary" 
+                id="btn-go-host"
+              >
+                我要揪團（開團管理）
+              </a>
+            </div>
+          </article>
+
+          <!-- 身分 3：商家（直連 merchant.html） -->
+          <article class="role-card" id="card-merchant">
+            <div class="card-image-wrap">
+              <img 
+                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" 
+                alt="熱情製作餐點的餐廳主廚與明亮廚房" 
+                class="card-image"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              >
+              <div class="image-fallback fallback-merchant" style="display: none;" aria-hidden="true">
+                <span>🏪</span>
+              </div>
+              <span class="card-badge">合作店家</span>
+            </div>
+            <div class="card-content">
+              <div class="role-header">
+                <span class="role-icon" aria-hidden="true">🍲</span>
+                <h3 class="role-title">我是商家</h3>
+              </div>
+              <p class="role-desc">登入專屬後台維護每日菜單與營業時段，接收預訂大單。不用抽成，填滿離峰備料產能。</p>
+              <ul class="role-features">
+                <li>自訂起送門檻與階梯滿額優惠</li>
+                <li>即時接單看板與廚房備餐總表</li>
+                <li>自送預訂大單，一趟送達好備料</li>
+              </ul>
+              <a 
+                href="merchant.html" 
+                class="btn btn-outline" 
+                id="btn-go-merchant"
+              >
+                我是店家（進入後台）
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 彈窗 1：團員輸入團購代碼 (Modal) ==================== -->
+  <div class="modal-overlay" id="member-modal" aria-hidden="true" role="dialog" aria-labelledby="member-modal-title">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="btn-close-member-modal" aria-label="關閉視窗">&times;</button>
+      
+      <div class="modal-header">
+        <span class="modal-badge">加入揪團</span>
+        <h3 id="member-modal-title" class="modal-title">請輸入團購代碼</h3>
+        <p class="modal-subtitle">請向開團的同事或主辦人索取 4 位數專屬代碼</p>
+      </div>
+
+      <form id="form-join-group" novalidate>
+        <!-- 4 碼獨立輸入格 -->
+        <div class="digit-inputs-group" aria-label="4 位數團購代碼">
+          <input type="text" inputmode="numeric" maxlength="1" class="code-digit" id="digit-1" data-index="1" aria-label="第 1 碼" autocomplete="off" required>
+          <input type="text" inputmode="numeric" maxlength="1" class="code-digit" id="digit-2" data-index="2" aria-label="第 2 碼" autocomplete="off" required>
+          <input type="text" inputmode="numeric" maxlength="1" class="code-digit" id="digit-3" data-index="3" aria-label="第 3 碼" autocomplete="off" required>
+          <input type="text" inputmode="numeric" maxlength="1" class="code-digit" id="digit-4" data-index="4" aria-label="第 4 碼" autocomplete="off" required>
+        </div>
+
+        <!-- 錯誤提示區 -->
+        <div class="form-feedback error-message" id="code-error-message" role="alert" style="display: none;"></div>
+
+        <p class="prototype-notice">
+          <strong>示範提醒：</strong> 可輸入任意 4 碼（例：<code>8825</code> 或 <code>A888</code>），系統將直接導航進入西門町合作店家菜單。
+        </p>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary btn-block btn-large" id="btn-submit-code">
+            驗證並進入菜單點餐
+          </button>
+          <button type="button" class="btn btn-ghost btn-block" id="btn-cancel-member">取消</button>
+        </div>
+      </form>
+
+      <!-- 驗證通過並即將跳轉的過渡回饋區塊 -->
+      <div class="demo-result" id="member-demo-result" style="display: none;">
+        <div class="result-icon">🎉</div>
+        <h4 class="result-title">代碼驗證成功！</h4>
+        <p class="result-text" id="member-result-text"></p>
+        <div class="demo-tag">正在前往點餐頁面...</div>
+        <div class="modal-actions">
+          <a href="member.html?code=8825" class="btn btn-secondary btn-block" id="btn-direct-go-member">立即前往點餐菜單 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 頁尾 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <span class="footer-title">來電送</span>
+        <span class="footer-dot">・</span>
+        <span>團體訂餐公益平台</span>
+      </div>
+      <p class="footer-copyright">
+        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 試行專案・以量換價・穩定物價
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

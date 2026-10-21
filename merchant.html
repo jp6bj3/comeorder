@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="來電送 - 合作商家管理後台。依訂單順序排程製作、歷史訂單歸檔、菜單客製化規格設定與供餐門檻控制。">
+  <title>商家管理中心｜來電送 - 店內價，一起訂更便宜</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-merchant">
+
+  <!-- 頂部導航列 -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="index.html" class="brand-logo" aria-label="返回來電送首頁">
+        <span class="logo-badge">商家後台</span>
+        <span class="logo-title">來電送</span>
+      </a>
+      <div class="header-actions">
+        <!-- 模擬模式標籤 -->
+        <span class="vendor-mode-tag" id="header-vendor-mode-tag" style="display: none;">🏛️ 既有展示廠商</span>
+        <span class="store-top-status" id="header-store-badge">● 門市營業中</span>
+        <a href="index.html" class="btn btn-ghost header-back-btn">← 返回首頁</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="merchant-main">
+    <div class="container">
+
+      <!-- ================= 狀態 A：商家登入 / 註冊入口面板 (未登入時顯示) ================= -->
+      <section id="section-merchant-auth" class="merchant-auth-card card-box" aria-labelledby="auth-heading" style="display: block;">
+        <div class="auth-card-header">
+          <span class="status-pill pill-warm">合作店家專區</span>
+          <h1 id="auth-heading" class="auth-title">商家管理中心</h1>
+          <p class="auth-desc">登入即可設定每日菜單、調整起送門檻並即時接收來自各大辦公室與社區的團購總單。</p>
+        </div>
+
+        <div class="auth-tabs-nav" role="tablist">
+          <button type="button" class="auth-tab-btn active" id="tab-btn-login" role="tab" aria-selected="true">
+            既有店家登入
+          </button>
+          <button type="button" class="auth-tab-btn" id="tab-btn-register" role="tab" aria-selected="false">
+            新店家合作註冊
+          </button>
+        </div>
+
+        <!-- 既有店家登入表單 -->
+        <form id="form-merchant-login-view" class="auth-form-body active" novalidate>
+          <div class="form-group">
+            <label for="input-auth-account" class="form-label">
+              商家帳號 / 店家代號 <span class="required-star">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-auth-account" 
+              class="form-control" 
+              placeholder="例：store01 或 西門町排骨大王" 
+              value="store01" 
+              required
+            >
+            <span class="field-hint">原型展示預設帳號：<code>store01</code></span>
+          </div>
+
+          <div class="form-group">
+            <label for="input-auth-password" class="form-label">
+              登入密碼 <span class="required-star">*</span>
+            </label>
+            <input 
+              type="password" 
+              id="input-auth-password" 
+              class="form-control" 
+              placeholder="請輸入密碼" 
+              value="demo1234" 
+              required
+            >
+            <span class="field-hint">原型展示預設密碼：<code>demo1234</code></span>
+          </div>
+
+          <div id="auth-login-error" class="error-message" role="alert" style="display: none;"></div>
+
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-primary btn-block btn-large" id="btn-submit-merchant-login">
+              登入商家管理中心 →
+            </button>
+          </div>
+        </form>
+
+        <!-- 新店家合作註冊表單 -->
+        <form id="form-merchant-register-view" class="auth-form-body" style="display: none;" novalidate>
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="reg-store-name" class="form-label">店家名稱 <span class="required-star">*</span></label>
+              <input type="text" id="reg-store-name" class="form-control" placeholder="例：萬華香雞排專賣" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-owner-name" class="form-label">負責人姓名 <span class="required-star">*</span></label>
+              <input type="text" id="reg-owner-name" class="form-control" placeholder="例：林老闆" required>
+            </div>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="reg-phone" class="form-label">連絡電話 / 手機 <span class="required-star">*</span></label>
+              <input type="tel" id="reg-phone" class="form-control" placeholder="例：02-23118888" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-category" class="form-label">餐飲類型 <span class="required-star">*</span></label>
+              <select id="reg-category" class="form-control form-select" required>
+                <option value="中式便當・快餐" selected>中式便當・快餐</option>
+                <option value="麵食・在地小吃">麵食・在地小吃</option>
+                <option value="炸物・輕食飲料">炸物・輕食飲料</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-address" class="form-label">門市實體地址 <span class="required-star">*</span></label>
+            <input type="text" id="reg-address" class="form-control" placeholder="例：臺北市萬華區西門町內江街100號" required>
+          </div>
+
+          <div id="auth-reg-error" class="error-message" role="alert" style="display: none;"></div>
+
+          <div class="auth-actions">
+            <button type="submit" class="btn btn-secondary btn-block btn-large">
+              送出合作申請並開通管理 →
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ================= 狀態 B：商家管理中心主控台 (登入後顯示) ================= -->
+      <div id="section-merchant-dashboard" class="merchant-dashboard-view" style="display: none;">
+
+        <!-- 新店家開店導引進度橫幅（僅在新店家註冊流程顯示） -->
+        <section id="merchant-onboarding-banner" class="card-box onboarding-banner" style="display: none;" aria-label="新店家開店導引">
+          <div class="onboarding-header">
+            <div class="onboarding-title-group">
+              <span class="onboarding-badge">🚀 開店導引精靈</span>
+              <h2 class="onboarding-title" id="onboarding-title">歡迎進駐！完成以下設定即可開始接單</h2>
+            </div>
+            <span class="onboarding-step-counter" id="onboarding-step-counter">步驟 1 / 2</span>
+          </div>
+
+          <div class="onboarding-steps-track">
+            <div class="onboarding-step-node completed" id="ob-node-1">
+              <div class="ob-node-circle">✓</div>
+              <div class="ob-node-text">
+                <strong>基本資料</strong>
+                <span>合作註冊成功</span>
+              </div>
+            </div>
+            <div class="onboarding-step-line active" id="ob-line-1"></div>
+            <div class="onboarding-step-node current" id="ob-node-2">
+              <div class="ob-node-circle">2</div>
+              <div class="ob-node-text">
+                <strong>上架首道餐點</strong>
+                <span>設定價格與客製規格</span>
+              </div>
+            </div>
+            <div class="onboarding-step-line" id="ob-line-2"></div>
+            <div class="onboarding-step-node pending" id="ob-node-3">
+              <div class="ob-node-circle">3</div>
+              <div class="ob-node-text">
+                <strong>供餐與門檻設定</strong>
+                <span>時段、門檻與優惠</span>
+              </div>
+            </div>
+            <div class="onboarding-step-line" id="ob-line-3"></div>
+            <div class="onboarding-step-node pending" id="ob-node-4">
+              <div class="ob-node-circle">★</div>
+              <div class="ob-node-text">
+                <strong>正式營業接單</strong>
+                <span>解鎖排程看板</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="onboarding-tip-box" id="onboarding-tip-text">
+            👉 <strong>下一步：</strong> 請在下方填寫餐點名稱、店內價與客製規格，點擊「新增餐點（上架菜單）」。
+          </div>
+        </section>
+
+        <!-- 頂部營業狀態列與歡迎橫幅 -->
+        <section class="card-box merchant-welcome-banner" aria-label="營業狀態主控">
+          <div class="banner-top-row">
+            <div class="store-info-group">
+              <div class="store-badge-row">
+                <span class="store-badge-pill" id="badge-store-category">中式便當・老字號</span>
+                <span class="vendor-profile-badge" id="badge-vendor-profile">🏛️ 既有示範廠商</span>
+              </div>
+              <h1 class="merchant-welcome-title" id="display-welcome-title">你好，西門町排骨大王</h1>
+              <p class="store-sub-desc">
+                門市地址：<span id="display-store-address">臺北市萬華區西門町內江街69號</span> ｜ 
+                供餐時間：<span id="display-operating-hours">上午 09:00 - 下午 18:00</span>
+              </p>
+            </div>
+
+            <div class="store-status-controller">
+              <div class="status-indicator-wrap">
+                <span class="status-pulse-dot" id="business-pulse-dot"></span>
+                <span class="business-status-text" id="business-status-label">目前營業狀態：接單中</span>
+              </div>
+              <div class="controller-btn-group">
+                <button type="button" class="btn btn-outline" id="btn-toggle-business">關閉接單</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-switch-vendor-quick" title="在舊廠商與新店家之間切換體驗">
+                  🔄 切換廠商
+                </button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-merchant-logout">登出</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 營業數據 KPI 摘要 -->
+          <div class="merchant-kpi-grid">
+            <div class="kpi-mini-card">
+              <span class="kpi-mini-label">今日進行中團單</span>
+              <div class="kpi-mini-val-wrap">
+                <strong class="kpi-mini-val" id="kpi-merchant-orders">0</strong>
+                <span class="kpi-mini-unit">團</span>
+              </div>
+            </div>
+            <div class="kpi-mini-card">
+              <span class="kpi-mini-label">排隊待製作餐點</span>
+              <div class="kpi-mini-val-wrap">
+                <strong class="kpi-mini-val metric-value--orange" id="kpi-merchant-dishes">0</strong>
+                <span class="kpi-mini-unit">份</span>
+              </div>
+            </div>
+            <div class="kpi-mini-card">
+              <span class="kpi-mini-label">今日累積總營業額</span>
+              <div class="kpi-mini-val-wrap">
+                <span class="kpi-mini-unit">NT$</span>
+                <strong class="kpi-mini-val metric-value--green" id="kpi-merchant-revenue">0</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 管理後台分頁切換導覽 -->
+        <nav class="merchant-nav-tabs" role="tablist" aria-label="商家功能分頁">
+          <button type="button" class="m-tab-btn active" id="btn-tab-orders" role="tab" aria-selected="true" data-target="panel-orders">
+            🛎️ 訂單製作排程 (<span id="badge-pending-count">0</span>)
+          </button>
+          <button type="button" class="m-tab-btn" id="btn-tab-history" role="tab" aria-selected="false" data-target="panel-history">
+            📜 歷史訂單 (<span id="badge-history-count">0</span>)
+          </button>
+          <button type="button" class="m-tab-btn" id="btn-tab-menu" role="tab" aria-selected="false" data-target="panel-menu">
+            🍲 餐點與菜單管理
+          </button>
+          <button type="button" class="m-tab-btn" id="btn-tab-settings" role="tab" aria-selected="false" data-target="panel-settings">
+            ⚙️ 供餐與門檻設定
+          </button>
+        </nav>
+
+        <!-- ================= 分頁 1：依訂單順序排程製作 ================= -->
+        <section id="panel-orders" class="merchant-panel-content active" role="tabpanel">
+          <div class="orders-toolbar card-box">
+            <div class="toolbar-info">
+              <h2 class="panel-section-title">進行中訂單・出餐排程隊列</h2>
+              <p class="panel-section-desc">此區僅顯示待製作與配送中訂單。一旦送達交單，該筆訂單將自動移出並歸檔至歷史訂單。</p>
+            </div>
+            <div class="toolbar-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-mock-incoming-order">
+                🔔 模擬新訂單進來（測試推播彈窗）
+              </button>
+            </div>
+          </div>
+
+          <!-- 逐單排程卡片容器 -->
+          <div class="order-queue-stream" id="order-queue-stream">
+            <!-- 由 JS 動態注入進行中的訂單卡片 -->
+          </div>
+        </section>
+
+        <!-- ================= 分頁 2：歷史訂單歸檔清單 ================= -->
+        <section id="panel-history" class="merchant-panel-content" role="tabpanel" style="display: none;">
+          <div class="orders-toolbar card-box">
+            <div class="toolbar-info">
+              <h2 class="panel-section-title">歷史訂單紀錄</h2>
+              <p class="panel-section-desc">已成功送達交單的歷史紀錄，依完成時間先後排列，保留完整客製化純文字備註。</p>
+            </div>
+            <div class="toolbar-actions">
+              <button type="button" class="btn btn-ghost btn-sm text-danger" id="btn-clear-history">
+                🗑️ 清空歷史紀錄
+              </button>
+            </div>
+          </div>
+
+          <!-- 歷史訂單卡片容器 -->
+          <div class="order-queue-stream" id="history-orders-stream">
+            <!-- 由 JS 動態注入已完成的歷史訂單卡片 -->
+          </div>
+        </section>
+
+        <!-- ================= 分頁 3：餐點新增與菜單管理 ================= -->
+        <section id="panel-menu" class="merchant-panel-content" role="tabpanel" style="display: none;">
+          <div class="menu-management-grid">
+            <div class="card-box menu-form-card">
+              <div class="card-section-header">
+                <div class="header-with-icon">
+                  <span class="section-icon">➕</span>
+                  <div>
+                    <h2 class="card-section-title" id="menu-form-heading">新增餐點</h2>
+                    <p class="card-section-desc">設定餐點名稱、美味說明、店內價與客製規格選項</p>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-cancel-edit-dish" style="display: none;">
+                  取消編輯
+                </button>
+              </div>
+
+              <form id="form-dish-editor" class="dish-editor-form" novalidate>
+                <input type="hidden" id="input-edit-dish-id" value="">
+
+                <div class="form-group">
+                  <label for="input-dish-name" class="form-label">餐點名稱 <span class="required-star">*</span></label>
+                  <input type="text" id="input-dish-name" class="form-control" placeholder="例：酥炸厚切排骨便當" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-dish-price" class="form-label">餐點基礎價格（店內價，NT$） <span class="required-star">*</span></label>
+                  <input type="number" id="input-dish-price" class="form-control" placeholder="例：120" min="1" max="9999" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-dish-desc" class="form-label">說明文字 / 餐點特色 <span class="required-star">*</span></label>
+                  <textarea id="input-dish-desc" class="form-control form-textarea" rows="2" placeholder="例：每日溫體現炸，香酥多汁！" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-dish-image" class="form-label">餐點圖片</label>
+                  <div class="image-uploader-box">
+                    <div class="image-preview-thumb" id="dish-preview-wrap">
+                      <span class="preview-placeholder">🍱</span>
+                    </div>
+                    <div class="image-uploader-controls">
+                      <input type="url" id="input-dish-image" class="form-control" placeholder="圖片網址（例：https://images.unsplash.com/...）">
+                      <span class="field-hint">未填寫將套用預設美味餐點圖片</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group custom-specs-section">
+                  <div class="custom-specs-toolbar">
+                    <div>
+                      <label class="form-label mb-0"><strong>客製化規格分組設定</strong></label>
+                      <span class="field-hint">支援單選必選、複選加價與特殊忌口偏好</span>
+                    </div>
+                    <div class="template-quick-buttons">
+                      <button type="button" class="btn btn-outline btn-xs" id="btn-tpl-bento">🍱 便當常用規格</button>
+                      <button type="button" class="btn btn-outline btn-xs" id="btn-tpl-snack">🥢 小吃炸物調味</button>
+                      <button type="button" class="btn btn-outline btn-xs" id="btn-tpl-drink">🧋 飲料經典規格</button>
+                    </div>
+                  </div>
+
+                  <div class="quick-preset-chips-box">
+                    <span class="quick-chips-title">⚡ 快速加入常用選項至當前分組：</span>
+                    <div class="quick-chips-wrapper" id="quick-preset-chips-wrap"></div>
+                  </div>
+
+                  <div class="custom-groups-container" id="custom-groups-builder"></div>
+
+                  <button type="button" class="btn btn-outline btn-block btn-add-group" id="btn-add-spec-group">
+                    + 新增自訂規格分組
+                  </button>
+                </div>
+
+                <div class="specs-live-preview-box">
+                  <span class="preview-box-badge">👀 團員點餐視角即時預覽</span>
+                  <div class="preview-box-content" id="dish-custom-live-preview"></div>
+                </div>
+
+                <div id="dish-form-error" class="error-message" role="alert" style="display: none;"></div>
+
+                <div class="form-actions" style="margin-top: 24px;">
+                  <button type="submit" class="btn btn-primary btn-block btn-large" id="btn-submit-dish">
+                    新增餐點（上架菜單）
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card-box menu-list-card">
+              <div class="card-section-header">
+                <div class="header-with-icon">
+                  <span class="section-icon">📋</span>
+                  <div>
+                    <h2 class="card-section-title">目前線上菜單</h2>
+                    <p class="card-section-desc">已上架餐點清單，規格分組清楚展示</p>
+                  </div>
+                </div>
+                <span class="menu-count-badge" id="display-menu-count">共 0 項餐點</span>
+              </div>
+
+              <div class="menu-items-grid" id="menu-items-container"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 分頁 4：供餐與門檻設定 ================= -->
+        <section id="panel-settings" class="merchant-panel-content" role="tabpanel" style="display: none;">
+          <div class="card-box settings-container-card">
+            <div class="card-section-header">
+              <div class="header-with-icon">
+                <span class="section-icon">⚙️</span>
+                <div>
+                  <h2 class="card-section-title">供餐時段與接單門檻設定</h2>
+                  <p class="card-section-desc">設定營業接單時段、單次最大受單量與起送金額門檻。</p>
+                </div>
+              </div>
+            </div>
+
+            <form id="form-merchant-settings" class="settings-form" novalidate>
+              <h3 class="settings-subheading">🕒 自動接單時段設定</h3>
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="set-start-time" class="form-label">自動開始接單時間 <span class="required-star">*</span></label>
+                  <input type="time" id="set-start-time" class="form-control" value="09:00" required>
+                </div>
+                <div class="form-group">
+                  <label for="set-stop-time" class="form-label">自動停止接單時間 <span class="required-star">*</span></label>
+                  <input type="time" id="set-stop-time" class="form-control" value="18:00" required>
+                </div>
+              </div>
+
+              <h3 class="settings-subheading" style="margin-top: 24px;">📊 門檻與產能控制</h3>
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="set-capacity-threshold" class="form-label">設定受單門檻（單批次最大份數） <span class="required-star">*</span></label>
+                  <div class="input-with-unit">
+                    <input type="number" id="set-capacity-threshold" class="form-control" value="50" min="5" max="300" required>
+                    <span class="input-unit">份</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="set-delivery-threshold" class="form-label">設定起送門檻（最低外送金額） <span class="required-star">*</span></label>
+                  <div class="input-with-unit">
+                    <span class="input-prefix">NT$</span>
+                    <input type="number" id="set-delivery-threshold" class="form-control" value="300" min="0" step="50" required>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="settings-subheading" style="margin-top: 24px;">🎁 階梯滿額優惠設定</h3>
+              <div class="tier-setting-row">
+                <div class="form-group">
+                  <label class="form-label">第 1 階梯（滿份送禮）</label>
+                  <div class="tier-inputs-inline">
+                    <span>滿</span>
+                    <input type="number" id="tier-qty-1" class="form-control form-control-sm" value="10" style="width: 80px;">
+                    <span>份，贈送</span>
+                    <input type="text" id="tier-gift-1" class="form-control" value="店家招牌冰紅茶 1 壺">
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                  <label class="form-label">第 2 階梯（大單折扣）</label>
+                  <div class="tier-inputs-inline">
+                    <span>滿</span>
+                    <input type="number" id="tier-qty-2" class="form-control form-control-sm" value="20" style="width: 80px;">
+                    <span>份，全單享</span>
+                    <input type="text" id="tier-gift-2" class="form-control" value="全單享 9 折優惠">
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-form-actions">
+                <button type="submit" class="btn btn-primary btn-large">儲存供餐營運設定</button>
+                <span class="save-feedback-text" id="settings-save-msg" style="display: none;">✓ 設定已更新</span>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= 彈窗：您有新訂單即時推播通知 ================= -->
+  <div class="modal-overlay" id="modal-incoming-order" aria-hidden="true" role="dialog" aria-labelledby="incoming-order-title">
+    <div class="modal-box modal-box--order-alert">
+      <div class="order-alert-header">
+        <span class="bell-alert-anim">🔔</span>
+        <div>
+          <h2 id="incoming-order-title" class="alert-title">您有新訂單！</h2>
+          <span class="alert-sub-caption" id="alert-store-subtitle">西門町排骨大王 專屬團單即時推播</span>
+        </div>
+      </div>
+
+      <div class="alert-details-card">
+        <div class="alert-detail-row">
+          <span class="detail-label">送餐地址：</span>
+          <strong class="detail-val" id="alert-address">--</strong>
+        </div>
+        <div class="alert-detail-row">
+          <span class="detail-label">負責人 / 召集人：</span>
+          <strong class="detail-val" id="alert-host">--</strong>
+        </div>
+        <div class="alert-detail-row alert-detail-row--price">
+          <span class="detail-label">訂單總金額：</span>
+          <strong class="detail-price" id="alert-amount">NT$ 0</strong>
+        </div>
+
+        <div class="alert-dish-summary-box">
+          <span class="summary-label">團購點餐品項與規格明細：</span>
+          <ul class="summary-dish-list" id="alert-dish-items"></ul>
+        </div>
+      </div>
+
+      <div class="alert-actions-grid">
+        <button type="button" class="btn btn-outline" id="btn-reject-order">✕ 產能已滿 / 婉拒訂單</button>
+        <button type="button" class="btn btn-primary" id="btn-accept-order">✓ 確認接單（排入製作隊列）</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-notification" id="toast-merchant" role="alert" aria-live="polite"></div>
+
+  <!-- 頁尾 -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <span class="footer-title">來電送</span>
+        <span class="footer-dot">・</span>
+        <span>合作商家管理後台</span>
+      </div>
+      <p class="footer-copyright">
+        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 原型展示・免平台抽成・店家自送不碰金流[cite: 1]
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/merchant.js"></script>
+</body>
+</html>
