@@ -1,0 +1,1437 @@
+/* ==========================================================================
+   來電送 (LaiPower Food) - 商家後台專屬樣式
+   ========================================================================== */
+.page-merchant {
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+.merchant-main {
+  padding: 32px 0 60px;
+}
+
+/* 頂部營業與模式標籤 */
+.store-top-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+.store-top-status.is-open {
+  background: rgba(39, 174, 96, 0.2);
+  color: #FFFFFF;
+}
+.store-top-status.is-closed {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.vendor-mode-tag {
+  background: rgba(24, 59, 43, 0.2);
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.merchant-auth-card {
+  max-width: 600px;
+  margin: 20px auto 40px;
+  padding: 36px 32px;
+}
+
+.auth-card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 10px 0 8px;
+}
+
+.auth-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* 雙軌情境指引卡片 */
+.demo-vendor-guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.vendor-guide-card {
+  background: #FAF8F5;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vendor-guide-card.guide-legacy {
+  border-left: 4px solid var(--color-primary);
+}
+
+.vendor-guide-card.guide-new {
+  border-left: 4px solid var(--color-accent);
+}
+
+.guide-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--color-text-muted);
+}
+
+.vendor-guide-card strong {
+  font-size: 0.95rem;
+  color: var(--color-primary);
+}
+
+.vendor-guide-card p {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.auth-tabs-nav {
+  display: flex;
+  background: #ECE7DE;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.auth-tab-btn.active {
+  background: #FFFFFF;
+  color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.auth-actions {
+  margin-top: 24px;
+}
+
+/* 新店家開店導引精靈 (Onboarding Wizard) */
+.onboarding-banner {
+  background: linear-gradient(135deg, #FFFDF9 0%, #F8F4EC 100%);
+  border: 2px solid var(--color-warm-gold);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(229, 169, 60, 0.15);
+  animation: slideDownFade 0.4s ease;
+}
+
+.onboarding-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px dashed #DFCDBA;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+}
+
+.onboarding-badge {
+  display: inline-block;
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+}
+
+.onboarding-title {
+  font-size: 1.35rem;
+  color: var(--color-primary);
+  font-weight: 800;
+  margin: 0;
+}
+
+.onboarding-step-counter {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #925807;
+  background: var(--color-gold-bg);
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+}
+
+.onboarding-steps-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.onboarding-step-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.ob-node-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  background-color: #E8E2D6;
+  color: var(--color-text-muted);
+  transition: all 0.3s ease;
+}
+
+.ob-node-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ob-node-text strong {
+  font-size: 0.88rem;
+  color: var(--color-text-main);
+}
+
+.ob-node-text span {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.onboarding-step-line {
+  flex: 1;
+  height: 3px;
+  background-color: #E8E2D6;
+  margin: 0 12px;
+  min-width: 24px;
+}
+
+.onboarding-step-line.active {
+  background-color: var(--color-accent);
+}
+
+.onboarding-step-node.completed .ob-node-circle {
+  background-color: var(--color-success);
+  color: #FFFFFF;
+}
+
+.onboarding-step-node.current .ob-node-circle {
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(217, 107, 67, 0.25);
+}
+
+.onboarding-step-node.current .ob-node-text strong {
+  color: var(--color-accent);
+}
+
+.onboarding-tip-box {
+  background-color: #FFFFFF;
+  border: 1px solid #EBE4D8;
+  border-left: 4px solid var(--color-accent);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--color-text-main);
+}
+
+/* 商家歡迎橫幅與營業控制器 */
+.merchant-welcome-banner {
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+
+.banner-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 24px;
+}
+
+.store-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.store-badge-pill {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(217, 107, 67, 0.12);
+  color: var(--color-accent);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.vendor-profile-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.vendor-profile-badge.badge-legacy {
+  background: rgba(24, 59, 43, 0.12);
+  color: var(--color-primary);
+  border: 1px solid rgba(24, 59, 43, 0.25);
+}
+
+.vendor-profile-badge.badge-new {
+  background: rgba(217, 107, 67, 0.15);
+  color: var(--color-accent);
+  border: 1px solid rgba(217, 107, 67, 0.35);
+}
+
+.merchant-welcome-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0 0 6px;
+}
+
+.store-sub-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.store-status-controller {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.status-indicator-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-pulse-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-pulse-dot.is-open {
+  background: #27AE60;
+  box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.25);
+}
+
+.status-pulse-dot.is-closed {
+  background: #A0A0A0;
+}
+
+.business-status-text {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.controller-btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* KPI 摘要卡片 */
+.merchant-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.kpi-mini-card {
+  background: #F4EFEA;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+}
+
+.kpi-mini-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.kpi-mini-val-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.kpi-mini-val {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.metric-value--orange { color: var(--color-accent) !important; }
+.metric-value--green { color: #2E7D32 !important; }
+
+/* 商家導覽頁籤 */
+.merchant-nav-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.m-tab-btn {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+}
+
+.m-tab-btn:hover {
+  background: #ECE7DE;
+}
+
+.m-tab-btn.active {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 訂單工具列與逐單排程卡片 */
+.orders-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 28px;
+  margin-bottom: 24px;
+}
+
+.panel-section-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0 0 4px;
+}
+
+.panel-section-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.order-queue-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-queue-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all var(--transition-normal);
+}
+
+.order-queue-card.is-order-done {
+  background: #FCFBF9;
+  border-color: #E8E2D8;
+  opacity: 0.85;
+}
+
+.queue-card-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 2px dashed #EAE4D8;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.queue-priority-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.queue-priority-tag {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.group-code-pill {
+  background: #F4EFE6;
+  color: #795548;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.order-time-text {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.queue-status-pill {
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+}
+
+.pill-preparing {
+  background: rgba(217, 107, 67, 0.15);
+  color: var(--color-accent);
+  border: 1px solid rgba(217, 107, 67, 0.3);
+}
+
+.pill-delivering {
+  background: rgba(229, 169, 60, 0.25);
+  color: #8A6400;
+  border: 1px solid rgba(229, 169, 60, 0.4);
+}
+
+.pill-delivered {
+  background: rgba(46, 125, 50, 0.15);
+  color: #2E7D32;
+}
+
+.queue-meta-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px 16px;
+  background: #FAF8F5;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border: 1px solid #EFEAE1;
+}
+
+.meta-strip-item {
+  font-size: 0.92rem;
+  color: var(--color-text-main);
+}
+
+.meta-strip-item .meta-k {
+  color: var(--color-text-muted);
+}
+
+.loc-highlight {
+  color: var(--color-primary);
+}
+
+.text-price {
+  color: var(--color-accent);
+}
+
+.queue-items-body {
+  margin-bottom: 20px;
+}
+
+.body-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.body-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.body-summary-count {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.body-summary-count strong {
+  color: var(--color-accent);
+  font-size: 1.05rem;
+}
+
+/* 純文字無底色俐落出餐條列 */
+.dish-ticket-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dish-ticket-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #FFFFFF;
+  border: 1px solid #ECE7DE;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all var(--transition-normal);
+}
+
+.dish-ticket-item:hover {
+  border-color: #D8CFBF;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-qty-badge {
+  font-size: 0.95rem;
+  font-weight: 800;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  min-width: 54px;
+  text-align: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.is-standard-dish .ticket-qty-badge {
+  background: #758A7A;
+}
+
+.ticket-dish-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticket-custom-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2D2D2D;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  line-height: 1.4;
+  margin-left: 6px;
+}
+
+.ticket-custom-text.is-standard-text {
+  color: #8C8479;
+  font-weight: 500;
+}
+
+.queue-card-bottom-actions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #F0ECE4;
+  padding-top: 14px;
+}
+
+.empty-queue-notice {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-text-muted);
+}
+
+.empty-queue-notice .empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* 菜單管理與自訂規格分組建造器 */
+.menu-management-grid {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 24px;
+}
+
+.menu-form-card, .menu-list-card {
+  padding: 24px 28px;
+}
+
+.card-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.header-with-icon {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.section-icon {
+  font-size: 1.8rem;
+}
+
+.card-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.card-section-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 2px 0 0;
+}
+
+.image-uploader-box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.image-preview-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #F4EFEA;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.image-preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-uploader-controls {
+  flex: 1;
+}
+
+.custom-specs-section {
+  background: #FDFBF7;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.custom-specs-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.template-quick-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-preset-chips-box {
+  background: #F5EFE6;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.quick-chips-title {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.quick-chips-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.quick-chip-btn {
+  background: #FFFFFF;
+  border: 1px solid #D8CFC2;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.quick-chip-btn:hover {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+}
+
+.quick-chip-btn small {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.custom-groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.spec-group-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.spec-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #F0ECE4;
+  padding-bottom: 8px;
+}
+
+.group-title-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.group-num-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.input-group-title {
+  max-width: 180px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.group-type-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.type-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: var(--color-text-main);
+  cursor: pointer;
+}
+
+.btn-delete-group {
+  border: none;
+  background: transparent;
+  color: #C0B7AB;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn-delete-group:hover {
+  color: var(--color-error);
+}
+
+.spec-options-list {
+  background: #FAF8F5;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.spec-options-header {
+  display: grid;
+  grid-template-columns: 1fr 130px 36px;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+.options-rows-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.spec-option-row {
+  display: grid;
+  grid-template-columns: 1fr 130px 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.input-opt-name {
+  background: #FFFFFF;
+}
+
+.input-opt-price-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 6px;
+}
+
+.input-opt-price-wrap .currency-prefix {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.input-opt-price-wrap .input-opt-price {
+  border: none;
+  padding: 4px 2px;
+  text-align: right;
+  width: 100%;
+}
+
+.input-opt-price-wrap .input-opt-price:focus {
+  box-shadow: none;
+}
+
+.btn-remove-opt-row {
+  border: none;
+  background: transparent;
+  color: #A69D92;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-remove-opt-row:hover {
+  color: var(--color-error);
+}
+
+.btn-add-opt-item {
+  text-decoration: underline;
+  padding: 2px 0;
+  color: var(--color-primary);
+}
+
+.btn-add-group {
+  border: 2px dashed #D6CEC2;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.btn-add-group:hover {
+  border-color: var(--color-primary);
+  background: #F4EFE7;
+}
+
+.specs-live-preview-box {
+  background: #FFFFFF;
+  border: 2px solid #E2D9CC;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 16px;
+}
+
+.preview-box-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #795548;
+  background: #EFEBE9;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.preview-dish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #F0ECE4;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.preview-dish-header strong {
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.preview-dish-header .preview-price {
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.preview-group-block {
+  margin-bottom: 8px;
+}
+
+.preview-group-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 4px;
+}
+
+.preview-type-badge {
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  background: #FDF0EB;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.preview-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preview-opt-chip {
+  font-size: 0.78rem;
+  background: #FAF8F5;
+  border: 1px solid #E4DDD2;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preview-opt-chip.is-selected {
+  background: #EBF3EE;
+  border-color: #2E7D32;
+  color: #1B5E20;
+  font-weight: 700;
+}
+
+.preview-plus-price {
+  color: var(--color-accent);
+  font-size: 0.72rem;
+}
+
+/* 線上菜單清單 */
+.menu-count-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: rgba(24, 59, 43, 0.08);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.menu-items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.dish-card-item {
+  display: flex;
+  gap: 16px;
+  border: 1px solid var(--color-border);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  background: #FFFFFF;
+}
+
+.dish-card-item.is-sold-out {
+  opacity: 0.65;
+  background: #FAFAFA;
+}
+
+.dish-card-media {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dish-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.availability-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 2px 0;
+}
+
+.badge-available { background: rgba(24, 59, 43, 0.85); color: #FFFFFF; }
+.badge-sold { background: rgba(180, 40, 40, 0.85); color: #FFFFFF; }
+
+.dish-card-info {
+  flex: 1;
+}
+
+.dish-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.dish-item-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.dish-item-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.dish-item-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.dish-specs-block {
+  background: #FAF9F6;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #EFEAE1;
+}
+
+.dish-spec-group-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 0.82rem;
+}
+
+.dish-spec-group-row:last-child {
+  margin-bottom: 0;
+}
+
+.spec-label-title {
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.spec-pills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.spec-pill {
+  font-size: 0.75rem;
+  padding: 1px 7px;
+  border-radius: var(--radius-full);
+}
+
+.spec-pill--normal {
+  background: #ECE7DF;
+  color: var(--color-text-main);
+}
+
+.spec-pill--addon {
+  background: #FDF0EB;
+  color: var(--color-accent);
+  font-weight: 700;
+  border: 1px solid rgba(217, 107, 67, 0.3);
+}
+
+.dish-item-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-availability-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dish-btn-group {
+  display: flex;
+  gap: 6px;
+}
+
+/* 供餐與門檻設定頁 */
+.settings-container-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 36px;
+}
+
+.settings-subheading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  border-left: 4px solid var(--color-accent);
+  padding-left: 10px;
+  margin-bottom: 16px;
+}
+
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-unit .form-control {
+  padding-right: 40px;
+}
+
+.input-unit {
+  position: absolute;
+  right: 14px;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 14px;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.input-with-unit .input-prefix + .form-control {
+  padding-left: 46px;
+}
+
+.tier-setting-row {
+  background: #F8F5EE;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+}
+
+.tier-inputs-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.settings-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.save-feedback-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2E7D32;
+}
+
+/* 訂單推播通知彈窗 (Order Alert Modal) */
+.modal-box--order-alert {
+  max-width: 540px;
+  border: 3px solid var(--color-accent);
+  box-shadow: 0 16px 40px rgba(217, 107, 67, 0.25);
+}
+
+.order-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 2px dashed rgba(217, 107, 67, 0.3);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.bell-alert-anim {
+  font-size: 2.2rem;
+  display: inline-block;
+  animation: bellShake 0.6s infinite ease-in-out alternate;
+}
+
+@keyframes bellShake {
+  0% { transform: rotate(-15deg); }
+  100% { transform: rotate(15deg); }
+}
+
+.alert-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.alert-sub-caption {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.alert-details-card {
+  background: #FAF8F5;
+  border: 1px solid var(--color-border);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.alert-detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.alert-detail-row--price {
+  border-top: 1px solid var(--color-border);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.detail-label {
+  color: var(--color-text-muted);
+}
+
+.detail-val {
+  color: var(--color-primary);
+  text-align: right;
+}
+
+.detail-price {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--color-accent);
+}
+
+.alert-dish-summary-box {
+  margin-top: 12px;
+  background: #FFFFFF;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.summary-dish-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.summary-dish-list li {
+  margin-bottom: 4px;
+}
+
+.alert-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+}

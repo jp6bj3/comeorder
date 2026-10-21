@@ -1,0 +1,714 @@
+/* ==========================================================================
+   來電送 (LaiPower Food) - 主辦人後台專屬樣式
+   ========================================================================== */
+.page-host {
+  background-color: var(--color-bg);
+}
+
+.host-main {
+  padding: 2.5rem 0 4rem;
+}
+
+.host-create-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.5rem;
+}
+
+.create-card-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.create-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0.75rem 0 0.5rem;
+}
+
+.create-desc {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* 餐點狀態時間軸卡片 (Timeline Card) */
+.timeline-status-card {
+  background: linear-gradient(145deg, #183B2B 0%, #204B37 100%);
+  color: #FFFFFF;
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 2.5rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 12px 30px rgba(24, 59, 43, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.timeline-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.timeline-headline-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-indicator-dot {
+  width: 14px;
+  height: 14px;
+  background-color: #27AE60;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.3);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(39, 174, 96, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+}
+
+.timeline-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-caption {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.timeline-main-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.02em;
+  margin: 0.15rem 0 0;
+}
+
+.timeline-hint-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+  color: #FAF8F5;
+}
+
+.timeline-track-wrap {
+  position: relative;
+  margin: 2.5rem 0 2rem;
+  padding: 0 1rem;
+}
+
+.timeline-progress-rail {
+  position: absolute;
+  top: 26px;
+  left: 5%;
+  right: 5%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.timeline-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #27AE60 0%, var(--color-accent) 100%);
+  border-radius: 999px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(217, 107, 67, 0.6);
+}
+
+.timeline-nodes-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.timeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 140px;
+  transition: transform 0.3s ease;
+}
+
+.node-icon-bubble {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.node-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.node-time {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.03em;
+}
+
+.node-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+}
+
+.node-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
+}
+
+.timeline-node.pending { opacity: 0.55; }
+.node-pill.pill-pending { background: rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.8); }
+
+.timeline-node.completed .node-icon-bubble {
+  background: #27AE60;
+  border-color: #A9DFBF;
+  color: #FFFFFF;
+  transform: scale(1.04);
+}
+.timeline-node.completed .node-time { color: #A9DFBF; }
+.node-pill.pill-completed {
+  background: rgba(39, 174, 96, 0.25);
+  color: #A9DFBF;
+  border: 1px solid rgba(39, 174, 96, 0.4);
+}
+
+.timeline-node.current .node-icon-bubble {
+  background: var(--color-accent);
+  border-color: #FFFFFF;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 6px rgba(217, 107, 67, 0.4);
+  animation: nodeGlow 2s infinite;
+}
+.timeline-node.current .node-time { color: #FFD5C5; font-weight: 700; }
+.node-pill.pill-active {
+  background: var(--color-accent);
+  color: #FFFFFF;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes nodeGlow {
+  0% { box-shadow: 0 0 0 0 rgba(217, 107, 67, 0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(217, 107, 67, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 107, 67, 0); }
+}
+
+/* 代碼分享列 */
+.code-share-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.code-display-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.code-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.code-boxes-wrap {
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.code-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 48px;
+  background: #FFFFFF;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 800;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.code-boxes-wrap:hover .code-box {
+  transform: translateY(-2px);
+}
+
+.share-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-share-link {
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+  border: none;
+  font-weight: 700;
+  padding: 0.75rem 1.4rem;
+}
+
+.btn-share-link:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* 團購摘要與階梯優惠網格 */
+.meta-progress-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.meta-summary-card, .tier-progress-card {
+  padding: 1.8rem;
+}
+
+.card-subheading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.meta-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.meta-list li {
+  display: flex;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.meta-label {
+  width: 85px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.meta-val {
+  color: var(--color-text-main);
+  font-weight: 600;
+}
+
+.deadline-highlight {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.tier-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tier-badge {
+  background-color: rgba(217, 107, 67, 0.12);
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+}
+
+.tier-condition-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-main);
+  margin: 0.75rem 0 1rem;
+}
+
+.tier-targets-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.target-node.active {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* KPI 統計卡片 */
+.kpi-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.kpi-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.kpi-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.kpi-unit {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.kpi-sub {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+/* 訂單明細管理卡與 Tab */
+.orders-management-card {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.orders-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.8rem;
+  background-color: #FAF8F5;
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.nav-tabs-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.order-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.order-tab-btn:hover {
+  color: var(--color-primary);
+  background-color: rgba(24, 59, 43, 0.05);
+}
+
+.order-tab-btn.active {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.filter-caption {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* 現場收款進度橫幅 (Payment Collection Banner) */
+.payment-collection-banner {
+  background: linear-gradient(135deg, #F0F7F2 0%, #E2EFE6 100%);
+  border-bottom: 2px solid #C4DFCE;
+  padding: 1.4rem 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  animation: slideDownFade 0.4s ease;
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.payment-banner-content {
+  flex: 1;
+  min-width: 280px;
+}
+
+.payment-banner-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.payment-badge {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.03em;
+}
+
+.payment-summary-stat {
+  font-size: 1.05rem;
+  color: var(--color-text-main);
+  font-weight: 600;
+}
+
+.paid-amount-val {
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.payment-guide-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0.25rem 0 0.75rem;
+  line-height: 1.4;
+}
+
+.payment-progress-bar-bg {
+  width: 100%;
+  max-width: 480px;
+  height: 8px;
+  background-color: rgba(24, 59, 43, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.payment-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #27AE60 0%, #2ECC71 100%);
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.payment-banner-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* 資料表格 (Data Table) 與收款 Checkbox */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem 1.8rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table th {
+  background-color: #FAF8F5;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(250, 248, 245, 0.7);
+}
+
+.pickup-id-badge {
+  display: inline-block;
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+}
+
+.table-dish-name {
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.pay-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  transition: all 0.2s ease;
+}
+
+.pay-checkbox-label:hover {
+  border-color: #27AE60;
+  background-color: #F9FCF9;
+}
+
+.pay-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #27AE60;
+  cursor: pointer;
+}
+
+.pay-status-txt {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.text-paid { color: #1E8449; }
+.text-unpaid { color: var(--color-text-light); }
+
+.data-table tbody tr.row-paid {
+  background-color: rgba(39, 174, 96, 0.06);
+}
+
+.data-table tbody tr.row-paid td {
+  border-bottom-color: rgba(39, 174, 96, 0.15);
+}
+
+.data-table tbody tr.row-paid .pickup-id-badge {
+  background-color: #27AE60;
+}
+
+.text-paid-total {
+  color: #1E8449;
+  font-size: 1rem;
+}
+
+.table-summary-row td {
+  background-color: #FAF8F5;
+  border-bottom: none;
+  font-size: 1.15rem;
+  padding: 1.25rem 1.8rem;
+}
+
+.total-highlight {
+  color: var(--color-accent);
+  font-size: 1.35rem;
+}
+
+.kitchen-header-tip {
+  padding: 1rem 1.8rem;
+  background-color: #F4F7F4;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.kitchen-qty-badge {
+  display: inline-block;
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: var(--radius-pill);
+}
+
+.host-bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.bottom-actions-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-actions-meta .meta-label {
+  width: auto;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.bottom-actions-meta .meta-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.bottom-buttons-cluster {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}

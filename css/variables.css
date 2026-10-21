@@ -1,0 +1,47 @@
+/* ==========================================================================
+   來電送 (LaiPower Food) - CSS 自訂變數 (Design Tokens)
+   ========================================================================== */
+
+:root {
+  /* 品牌核心色彩 */
+  --color-primary: #183B2B;        /* 墨綠色/深森林綠（沉穩、品質、信賴） */
+  --color-primary-light: #2A5A44;  /* 森林綠 Hover 淺色 */
+  --color-accent: #D96B43;         /* 暖陶土橘（食慾感、焦點操作按鈕） */
+  --color-accent-hover: #BF5732;   /* 陶土橘 Hover 深色 */
+  --color-warm-gold: #E5A93C;      /* 柔和金黃/暖麥黃 */
+  --color-gold-bg: #FDF4E5;        /* 暖金淺底色 */
+
+  /* 中性背景與文字色彩 */
+  --color-bg: #FAF8F5;             /* 奶油米白底色 */
+  --color-card-bg: #FFFFFF;        /* 純白卡片底色 */
+  --color-text-main: #243028;      /* 主要內文（深墨黑綠） */
+  --color-text-muted: #5C6B64;     /* 次要說明（橄欖灰綠） */
+  --color-text-light: #7A8780;     /* 輔助淺灰 */
+  --color-border: #E8E2D8;         /* 柔和溫暖邊線 */
+  --color-border-focus: #D96B43;   /* 聚焦邊線 */
+  --color-error: #D03D3D;          /* 錯誤警示紅 */
+  --color-error-bg: #FDF0F0;       /* 錯誤提示背景 */
+  --color-success: #2E7D32;        /* 成功綠色 */
+  --color-success-bg: #EAF5EB;     /* 成功淺底色 */
+
+  /* 字體家族 */
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-family-serif: "Noto Serif TC", Georgia, "Times New Roman", serif;
+
+  /* 圓角系統 */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --radius-pill: 9999px;
+
+  /* 柔和陰影系統 */
+  --shadow-sm: 0 2px 8px rgba(24, 59, 43, 0.05);
+  --shadow-md: 0 8px 24px rgba(24, 59, 43, 0.08);
+  --shadow-lg: 0 16px 40px rgba(24, 59, 43, 0.12);
+  --shadow-card-hover: 0 14px 32px rgba(217, 107, 67, 0.16);
+
+  /* 動畫過渡 */
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.28s ease;
+}
