@@ -358,15 +358,40 @@
                   <textarea id="input-dish-desc" class="form-control form-textarea" rows="2" placeholder="例：每日溫體現炸，香酥多汁！" required></textarea>
                 </div>
 
+                <!-- 餐點圖片上傳區塊（由網址輸入改為檔案上傳） -->
                 <div class="form-group">
-                  <label for="input-dish-image" class="form-label">餐點圖片</label>
+                  <label class="form-label">餐點圖片上傳</label>
                   <div class="image-uploader-box">
+                    <!-- 縮圖即時預覽外框 -->
                     <div class="image-preview-thumb" id="dish-preview-wrap">
                       <span class="preview-placeholder">🍱</span>
                     </div>
+                    
                     <div class="image-uploader-controls">
-                      <input type="url" id="input-dish-image" class="form-control" placeholder="圖片網址（例：https://images.unsplash.com/...）">
-                      <span class="field-hint">未填寫將套用預設美味餐點圖片</span>
+                      <!-- 隱藏的原生檔案選擇器（點擊客製化按鈕觸發） -->
+                      <input 
+                        type="file" 
+                        id="input-dish-file" 
+                        accept="image/png, image/jpeg, image/jpg, image/webp" 
+                        style="display: none;"
+                      >
+                      <!-- 隱藏欄位：儲存轉碼與壓縮後的圖片 Base64 字串 -->
+                      <input type="hidden" id="input-dish-image-data" value="">
+
+                      <!-- 操作按鈕群 -->
+                      <div class="file-upload-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-trigger-upload">
+                          📷 選擇本機圖片檔案
+                        </button>
+                        <button type="button" class="btn btn-ghost btn-sm text-danger" id="btn-remove-image" style="display: none;">
+                          ✕ 移除圖片
+                        </button>
+                      </div>
+
+                      <!-- 提示說明文字 -->
+                      <span class="field-hint" id="file-name-hint">
+                        支援 JPG、PNG、WebP，系統將自動進行輕量縮圖最佳化
+                      </span>
                     </div>
                   </div>
                 </div>

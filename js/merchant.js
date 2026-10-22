@@ -393,7 +393,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputDishName = document.getElementById("input-dish-name");
   const inputDishPrice = document.getElementById("input-dish-price");
   const inputDishDesc = document.getElementById("input-dish-desc");
-  const inputDishImage = document.getElementById("input-dish-image");
+  const inputDishFile = document.getElementById("input-dish-file");
+  const inputDishImageData = document.getElementById("input-dish-image-data");
+  const btnTriggerUpload = document.getElementById("btn-trigger-upload");
+  const btnRemoveImage = document.getElementById("btn-remove-image");
+  const fileNameHint = document.getElementById("file-name-hint");
   const dishPreviewWrap = document.getElementById("dish-preview-wrap");
   const customGroupsBuilder = document.getElementById("custom-groups-builder");
   const btnAddSpecGroup = document.getElementById("btn-add-spec-group");
@@ -1216,13 +1220,83 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSpecGroupsBuilder();
   });
 
-  inputDishImage?.addEventListener("input", () => {
-    const url = inputDishImage.value.trim();
-    if (url) {
-      dishPreviewWrap.innerHTML = `<img src="${escapeHtml(url)}" alt="餐點圖片預覽" onerror="this.parentElement.innerHTML='🍱';">`;
-    } else {
-      dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
+  // 輔助函式：將圖片等比例壓縮至 500x500 內並轉為輕量 Base64
+  const processAndCompressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX_DIM = 500;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_DIM) {
+              height = Math.round((height * MAX_DIM) / width);
+              width = MAX_DIM;
+            }
+          } else {
+            if (height > MAX_DIM) {
+              width = Math.round((width * MAX_DIM) / height);
+              height = MAX_DIM;
+            }
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", 0.85)); // 輸出輕量 JPEG
+        };
+        img.onerror = () => reject(new Error("圖片載入解析失敗"));
+        img.src = e.target.result;
+      };
+      reader.onerror = () => reject(new Error("檔案讀取失敗"));
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // 點擊「選擇本機圖片檔案」觸發隱藏的 input[type=file]
+  btnTriggerUpload?.addEventListener("click", () => {
+    inputDishFile?.click();
+  });
+
+  // 使用者選擇圖片後，自動壓縮並預覽
+  inputDishFile?.addEventListener("change", async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("請選擇有效的圖片檔案（支援 JPG、PNG 或 WebP）！");
+      return;
     }
+
+    try {
+      const compressedBase64 = await processAndCompressImage(file);
+      inputDishImageData.value = compressedBase64; // 寫入隱藏欄位
+      
+      // 即時預覽
+      dishPreviewWrap.innerHTML = `<img src="${compressedBase64}" alt="預覽" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+      if (btnRemoveImage) btnRemoveImage.style.display = "inline-block";
+      if (fileNameHint) fileNameHint.textContent = `已選取：${file.name}（已自動最佳化）`;
+      
+      showToast("圖片上傳並完成最佳化！");
+    } catch (err) {
+      console.error(err);
+      showToast("圖片處理失敗，請重試！");
+    }
+  });
+
+  // 點擊「✕ 移除圖片」清除設定
+  btnRemoveImage?.addEventListener("click", () => {
+    if (inputDishFile) inputDishFile.value = "";
+    if (inputDishImageData) inputDishImageData.value = "";
+    dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
+    if (btnRemoveImage) btnRemoveImage.style.display = "none";
+    if (fileNameHint) fileNameHint.textContent = "支援 JPG、PNG、WebP，系統將自動進行輕量縮圖最佳化";
+    showToast("已清除自訂圖片。");
   });
 
   const renderMenuList = () => {
@@ -1311,10 +1385,20 @@ document.addEventListener("DOMContentLoaded", () => {
           inputDishName.value = targetDish.name;
           inputDishPrice.value = targetDish.price;
           inputDishDesc.value = targetDish.desc;
-          inputDishImage.value = targetDish.image;
+          if (targetDish.image) {
+            inputDishImageData.value = targetDish.image;
+            dishPreviewWrap.innerHTML = `<img src="${escapeHtml(targetDish.image)}" alt="預覽" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" onerror="this.parentElement.innerHTML='🍱';">`;
+            if (btnRemoveImage) btnRemoveImage.style.display = "inline-block";
+            if (fileNameHint) fileNameHint.textContent = "目前已使用自訂餐點圖片（點擊按鈕可更換）";
+          } else {
+            inputDishImageData.value = "";
+            dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
+            if (btnRemoveImage) btnRemoveImage.style.display = "none";
+            if (fileNameHint) fileNameHint.textContent = "未上傳圖片（將套用預設美味圖示）";
+          }
           editingSpecGroups = targetDish.specGroups ? JSON.parse(JSON.stringify(targetDish.specGroups)) : [];
-          dishPreviewWrap.innerHTML = `<img src="${escapeHtml(targetDish.image)}" alt="預覽" onerror="this.parentElement.innerHTML='🍱';">`;
-          
+          if (inputDishFile) inputDishFile.value = "";
+
           renderSpecGroupsBuilder();
           menuFormHeading.textContent = `編輯餐點：${targetDish.name}`;
           btnSubmitDish.textContent = "儲存規格與餐點修改";
@@ -1350,6 +1434,13 @@ document.addEventListener("DOMContentLoaded", () => {
     formDishEditor.reset();
     inputEditDishId.value = "";
     editingSpecGroups = JSON.parse(JSON.stringify(TEMPLATE_BENTO));
+    if (inputDishFile) inputDishFile.value = "";
+    if (inputDishImageData) inputDishImageData.value = "";
+    dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
+    if (btnRemoveImage) btnRemoveImage.style.display = "none";
+    if (fileNameHint) fileNameHint.textContent = "支援 JPG、PNG、WebP，系統將自動進行輕量縮圖最佳化";
+    
+    renderSpecGroupsBuilder();
     dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
     renderSpecGroupsBuilder();
     menuFormHeading.textContent = "新增餐點";
@@ -1363,8 +1454,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = inputDishName.value.trim();
     const price = parseInt(inputDishPrice.value, 10);
     const desc = inputDishDesc.value.trim();
-    const image = inputDishImage.value.trim() || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";
-    const editId = inputEditDishId.value.trim();
+    const image = inputDishImageData.value.trim() || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";    const editId = inputEditDishId.value.trim();
 
     if (!name || isNaN(price) || price <= 0 || !desc) {
       dishFormError.style.display = "block";
