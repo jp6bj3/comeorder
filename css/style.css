@@ -135,6 +135,14 @@ body {
   text-decoration: none;
   color: #FFFFFF;
 }
+/* 導覽列 Logo 圖片樣式 */
+.header-logo-img {
+  height: 50px; /* 固定高度，避免撐破導覽列 */
+  width: auto;
+  object-fit: contain; /* 確保圖片不變形 */
+  border-radius: var(--radius-sm); /* 套用全站一致的微圓角設計 */
+  margin-right: 2px; /* 與旁邊的標題文字保留舒適間距 */
+}
 
 .logo-badge {
   background-color: var(--color-accent);
