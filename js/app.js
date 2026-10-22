@@ -1,5 +1,5 @@
 /**
- * 來電送 (LaiPower Food) - 首頁前端核心互動邏輯
+ * 來點送 (LaiPower Food) - 首頁前端核心互動邏輯
  * 
  * 功能：
  * 1. 團友入口：點擊開啟 4 碼代碼輸入彈窗（若點擊備援則直連 member.html）。
@@ -11,7 +11,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  console.log("【來電送】首頁腳本已啟動，身分超連結已生效...");
+  console.log("【來點送】首頁腳本已啟動，身分超連結已生效...");
 
   // 1. 彈窗元素選取
   const memberModal = document.getElementById("member-modal");

@@ -1,5 +1,5 @@
 /**
- * 來電送 (LaiPower Food) - 團購團員點餐頁面互動控制器
+ * 來點送 (LaiPower Food) - 團購團員點餐頁面互動控制器
  * 核心調整：
  * 1. 修正「今日不參加」事件監聽綁定（不記名、純計數）。
  * 2. 送單成功後的顯示方式，改為與「今日不參加」一致的頁面內卡片狀態 (In-page status card)。
@@ -878,7 +878,7 @@
       const r = State.lastSubmittedReceipt;
       if (!r) return;
 
-      let clipText = `【來電送・取餐憑證】\n`;
+      let clipText = `【來點送・取餐憑證】\n`;
       clipText += `店家：${r.storeName}\n`;
       clipText += `取餐號碼：${r.pickupNumber}\n`;
       clipText += `應付金額：NT$ ${r.totalAmount}\n`;
