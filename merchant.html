@@ -3,40 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="來點送 - 合作商家管理後台。依訂單順序排程製作、歷史訂單歸檔、菜單客製化規格設定與供餐門檻控制。">
-  <title>商家管理中心｜來點送 - 店內價，一起訂更便宜</title>
-
-  <!-- ==================== 守門員存取防護（禁止一般使用者直接進入） ==================== -->
-  <script>
-    (function () {
-      "use strict";
-      // 專屬店家進場金鑰：可自訂，預設為 partner
-      const PORTAL_SECRET = "partner";
-      const AUTH_KEY = "laipower_partner_authorized";
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const incomingKey = urlParams.get("portal") || urlParams.get("auth");
-
-      // 檢查是否帶有正確通行鑰匙，或在同一瀏覽器 Session 中已驗證
-      const hasValidKey = (incomingKey === PORTAL_SECRET);
-      const isAlreadyAuthed = (sessionStorage.getItem(AUTH_KEY) === "true");
-
-      if (hasValidKey || isAlreadyAuthed) {
-        // 通行證有效，記錄於 Session
-        sessionStorage.setItem(AUTH_KEY, "true");
-        // 自動抹除網址列中的 ?portal=partner 參數，避免螢幕或網址被旁人看到
-        if (incomingKey) {
-          const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-          window.history.replaceState({ path: cleanUrl }, document.title, cleanUrl);
-        }
-      } else {
-        // 未授權的訪客直接輸入網址：立即阻斷並轉回首頁
-        alert("⚠️ 此頁面為合作店家專屬管理後台，未經授權無法直接進入！系統將為您導回首頁。");
-        window.location.replace("index.html");
-      }
-    })();
-  </script>
-
+  <meta name="description" content="來電送 - 合作商家管理後台。依訂單順序排程製作、歷史訂單歸檔、菜單客製化規格設定與供餐門檻控制。">
+  <title>商家管理中心｜來電送 - 店內價，一起訂更便宜</title>
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/merchant.css">
@@ -47,10 +15,9 @@
   <!-- 頂部導航列 -->
   <header class="site-header">
     <div class="container header-container">
-      <a href="index.html" class="brand-logo" aria-label="返回來點送首頁">
-        <img src="img/LOGO.png" alt="來點送 Logo" class="header-logo-img">
+      <a href="index.html" class="brand-logo" aria-label="返回來電送首頁">
         <span class="logo-badge">商家後台</span>
-        <span class="logo-title">來點送</span>
+        <span class="logo-title">來電送</span>
       </a>
       <div class="header-actions">
         <!-- 模擬模式標籤 -->
@@ -168,7 +135,7 @@
       <!-- ================= 狀態 B：商家管理中心主控台 (登入後顯示) ================= -->
       <div id="section-merchant-dashboard" class="merchant-dashboard-view" style="display: none;">
 
-        <!-- 新店家開店導引進度橫幅 -->
+        <!-- 新店家開店導引進度橫幅（僅在新店家註冊流程顯示） -->
         <section id="merchant-onboarding-banner" class="card-box onboarding-banner" style="display: none;" aria-label="新店家開店導引">
           <div class="onboarding-header">
             <div class="onboarding-title-group">
@@ -303,7 +270,10 @@
             </div>
           </div>
 
-          <div class="order-queue-stream" id="order-queue-stream"></div>
+          <!-- 逐單排程卡片容器 -->
+          <div class="order-queue-stream" id="order-queue-stream">
+            <!-- 由 JS 動態注入進行中的訂單卡片 -->
+          </div>
         </section>
 
         <!-- ================= 分頁 2：歷史訂單歸檔清單 ================= -->
@@ -320,7 +290,10 @@
             </div>
           </div>
 
-          <div class="order-queue-stream" id="history-orders-stream"></div>
+          <!-- 歷史訂單卡片容器 -->
+          <div class="order-queue-stream" id="history-orders-stream">
+            <!-- 由 JS 動態注入已完成的歷史訂單卡片 -->
+          </div>
         </section>
 
         <!-- ================= 分頁 3：餐點新增與菜單管理 ================= -->
@@ -358,40 +331,15 @@
                   <textarea id="input-dish-desc" class="form-control form-textarea" rows="2" placeholder="例：每日溫體現炸，香酥多汁！" required></textarea>
                 </div>
 
-                <!-- 餐點圖片上傳區塊（由網址輸入改為檔案上傳） -->
                 <div class="form-group">
-                  <label class="form-label">餐點圖片上傳</label>
+                  <label for="input-dish-image" class="form-label">餐點圖片</label>
                   <div class="image-uploader-box">
-                    <!-- 縮圖即時預覽外框 -->
                     <div class="image-preview-thumb" id="dish-preview-wrap">
                       <span class="preview-placeholder">🍱</span>
                     </div>
-                    
                     <div class="image-uploader-controls">
-                      <!-- 隱藏的原生檔案選擇器（點擊客製化按鈕觸發） -->
-                      <input 
-                        type="file" 
-                        id="input-dish-file" 
-                        accept="image/png, image/jpeg, image/jpg, image/webp" 
-                        style="display: none;"
-                      >
-                      <!-- 隱藏欄位：儲存轉碼與壓縮後的圖片 Base64 字串 -->
-                      <input type="hidden" id="input-dish-image-data" value="">
-
-                      <!-- 操作按鈕群 -->
-                      <div class="file-upload-actions">
-                        <button type="button" class="btn btn-secondary btn-sm" id="btn-trigger-upload">
-                          📷 選擇本機圖片檔案
-                        </button>
-                        <button type="button" class="btn btn-ghost btn-sm text-danger" id="btn-remove-image" style="display: none;">
-                          ✕ 移除圖片
-                        </button>
-                      </div>
-
-                      <!-- 提示說明文字 -->
-                      <span class="field-hint" id="file-name-hint">
-                        支援 JPG、PNG、WebP，系統將自動進行輕量縮圖最佳化
-                      </span>
+                      <input type="url" id="input-dish-image" class="form-control" placeholder="圖片網址（例：https://images.unsplash.com/...）">
+                      <span class="field-hint">未填寫將套用預設美味餐點圖片</span>
                     </div>
                   </div>
                 </div>
@@ -478,22 +426,40 @@
                   <input type="time" id="set-stop-time" class="form-control" value="18:00" required>
                 </div>
               </div>
+              <div id="settings-time-error" class="error-message" role="alert" style="display: none;"></div>
 
               <h3 class="settings-subheading" style="margin-top: 24px;">📊 門檻與產能控制</h3>
               <div class="form-row-2col">
                 <div class="form-group">
                   <label for="set-capacity-threshold" class="form-label">設定受單門檻（單批次最大份數） <span class="required-star">*</span></label>
-                  <div class="input-with-unit">
-                    <input type="number" id="set-capacity-threshold" class="form-control" value="50" min="5" max="300" required>
-                    <span class="input-unit">份</span>
+                  <div class="select-wrapper">
+                    <select id="set-capacity-threshold" class="form-control form-select" required>
+                      <option value="10">10 份</option>
+                      <option value="20">20 份</option>
+                      <option value="30">30 份</option>
+                      <option value="50" selected>50 份</option>
+                      <option value="80">80 份</option>
+                      <option value="100">100 份</option>
+                      <option value="150">150 份</option>
+                      <option value="200">200 份</option>
+                      <option value="300">300 份</option>
+                    </select>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label for="set-delivery-threshold" class="form-label">設定起送門檻（最低外送金額） <span class="required-star">*</span></label>
-                  <div class="input-with-unit">
-                    <span class="input-prefix">NT$</span>
-                    <input type="number" id="set-delivery-threshold" class="form-control" value="300" min="0" step="50" required>
+                  <div class="select-wrapper">
+                    <select id="set-delivery-threshold" class="form-control form-select" required>
+                      <option value="0">不設門檻</option>
+                      <option value="200">NT$ 200</option>
+                      <option value="300" selected>NT$ 300</option>
+                      <option value="400">NT$ 400</option>
+                      <option value="500">NT$ 500</option>
+                      <option value="600">NT$ 600</option>
+                      <option value="800">NT$ 800</option>
+                      <option value="1000">NT$ 1000</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -506,7 +472,13 @@
                     <span>滿</span>
                     <input type="number" id="tier-qty-1" class="form-control form-control-sm" value="10" style="width: 80px;">
                     <span>份，贈送</span>
-                    <input type="text" id="tier-gift-1" class="form-control" value="店家招牌冰紅茶 1 壺">
+                    <select id="tier-gift-1" class="form-control form-select tier-gift-select" style="flex: 1; min-width: 200px; width: auto;">
+                      <option value="招牌小菜 1 份" selected>招牌小菜 1 份</option>
+                      <option value="手工滷蛋 1 份">手工滷蛋 1 份</option>
+                      <option value="飲料 1 杯（每人）">飲料 1 杯（每人）</option>
+                      <option value="__custom__">✏️ 自訂內容…</option>
+                    </select>
+                    <input type="text" id="tier-gift-1-custom" class="form-control" placeholder="請輸入自訂贈品內容" maxlength="30" style="display: none; width: 100%; margin-top: 6px;">
                   </div>
                 </div>
                 <div class="form-group" style="margin-top: 12px;">
@@ -515,7 +487,13 @@
                     <span>滿</span>
                     <input type="number" id="tier-qty-2" class="form-control form-control-sm" value="20" style="width: 80px;">
                     <span>份，全單享</span>
-                    <input type="text" id="tier-gift-2" class="form-control" value="全單享 9 折優惠">
+                    <select id="tier-gift-2" class="form-control form-select tier-gift-select" style="flex: 1; min-width: 200px; width: auto;">
+                      <option value="全單享 9 折優惠" selected>全單享 9 折優惠</option>
+                      <option value="全單享 95 折優惠">全單享 95 折優惠</option>
+                      <option value="折抵 NT$ 50">折抵 NT$ 50</option>
+                      <option value="__custom__">✏️ 自訂內容…</option>
+                    </select>
+                    <input type="text" id="tier-gift-2-custom" class="form-control" placeholder="請輸入自訂優惠內容" maxlength="30" style="display: none; width: 100%; margin-top: 6px;">
                   </div>
                 </div>
               </div>
@@ -533,7 +511,7 @@
     </div>
   </main>
 
-  <!-- 彈窗：新訂單即時推播通知 -->
+  <!-- ================= 彈窗：您有新訂單即時推播通知 ================= -->
   <div class="modal-overlay" id="modal-incoming-order" aria-hidden="true" role="dialog" aria-labelledby="incoming-order-title">
     <div class="modal-box modal-box--order-alert">
       <div class="order-alert-header">
@@ -577,12 +555,12 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-brand">
-        <span class="footer-title">來點送</span>
+        <span class="footer-title">來電送</span>
         <span class="footer-dot">・</span>
         <span>合作商家管理後台</span>
       </div>
       <p class="footer-copyright">
-        程式驅動協會 專案指導 &copy; 2026 來點送 (LaiPower Food) 原型展示・免平台抽成・店家自送不碰金流
+        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 原型展示・免平台抽成・店家自送不碰金流
       </p>
     </div>
   </footer>

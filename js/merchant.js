@@ -1,5 +1,5 @@
 /**
- * 來點送 (LaiPower Food) - 商家管理後台控制器
+ * 來電送 (LaiPower Food) - 商家管理後台控制器
  * 
  * 核心升級：
  * 1. 【雙軌獨立沙盒模擬】：
@@ -12,7 +12,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  console.log("【來點送】商家後台控制器啟動（已載入雙軌獨立模擬模式）...");
+  console.log("【來電送】商家後台控制器啟動（已載入雙軌獨立模擬模式）...");
 
   // =========================================================================
   // 1. 規格範本與資料庫常數
@@ -393,11 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputDishName = document.getElementById("input-dish-name");
   const inputDishPrice = document.getElementById("input-dish-price");
   const inputDishDesc = document.getElementById("input-dish-desc");
-  const inputDishFile = document.getElementById("input-dish-file");
-  const inputDishImageData = document.getElementById("input-dish-image-data");
-  const btnTriggerUpload = document.getElementById("btn-trigger-upload");
-  const btnRemoveImage = document.getElementById("btn-remove-image");
-  const fileNameHint = document.getElementById("file-name-hint");
+  const inputDishImage = document.getElementById("input-dish-image");
   const dishPreviewWrap = document.getElementById("dish-preview-wrap");
   const customGroupsBuilder = document.getElementById("custom-groups-builder");
   const btnAddSpecGroup = document.getElementById("btn-add-spec-group");
@@ -419,6 +415,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const setCapacityThreshold = document.getElementById("set-capacity-threshold");
   const setDeliveryThreshold = document.getElementById("set-delivery-threshold");
   const settingsSaveMsg = document.getElementById("settings-save-msg");
+  const settingsTimeError = document.getElementById("settings-time-error");
+
+  // 階梯贈品下拉與自訂輸入框（僅畫面互動，不存檔）
+  const tierGiftSelects = [
+    { select: document.getElementById("tier-gift-1"), custom: document.getElementById("tier-gift-1-custom") },
+    { select: document.getElementById("tier-gift-2"), custom: document.getElementById("tier-gift-2-custom") }
+  ];
 
   // 推播彈窗
   const modalIncomingOrder = document.getElementById("modal-incoming-order");
@@ -1220,83 +1223,13 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSpecGroupsBuilder();
   });
 
-  // 輔助函式：將圖片等比例壓縮至 500x500 內並轉為輕量 Base64
-  const processAndCompressImage = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const MAX_DIM = 500;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_DIM) {
-              height = Math.round((height * MAX_DIM) / width);
-              width = MAX_DIM;
-            }
-          } else {
-            if (height > MAX_DIM) {
-              width = Math.round((width * MAX_DIM) / height);
-              height = MAX_DIM;
-            }
-          }
-
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL("image/jpeg", 0.85)); // 輸出輕量 JPEG
-        };
-        img.onerror = () => reject(new Error("圖片載入解析失敗"));
-        img.src = e.target.result;
-      };
-      reader.onerror = () => reject(new Error("檔案讀取失敗"));
-      reader.readAsDataURL(file);
-    });
-  };
-
-  // 點擊「選擇本機圖片檔案」觸發隱藏的 input[type=file]
-  btnTriggerUpload?.addEventListener("click", () => {
-    inputDishFile?.click();
-  });
-
-  // 使用者選擇圖片後，自動壓縮並預覽
-  inputDishFile?.addEventListener("change", async (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      showToast("請選擇有效的圖片檔案（支援 JPG、PNG 或 WebP）！");
-      return;
+  inputDishImage?.addEventListener("input", () => {
+    const url = inputDishImage.value.trim();
+    if (url) {
+      dishPreviewWrap.innerHTML = `<img src="${escapeHtml(url)}" alt="餐點圖片預覽" onerror="this.parentElement.innerHTML='🍱';">`;
+    } else {
+      dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
     }
-
-    try {
-      const compressedBase64 = await processAndCompressImage(file);
-      inputDishImageData.value = compressedBase64; // 寫入隱藏欄位
-      
-      // 即時預覽
-      dishPreviewWrap.innerHTML = `<img src="${compressedBase64}" alt="預覽" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
-      if (btnRemoveImage) btnRemoveImage.style.display = "inline-block";
-      if (fileNameHint) fileNameHint.textContent = `已選取：${file.name}（已自動最佳化）`;
-      
-      showToast("圖片上傳並完成最佳化！");
-    } catch (err) {
-      console.error(err);
-      showToast("圖片處理失敗，請重試！");
-    }
-  });
-
-  // 點擊「✕ 移除圖片」清除設定
-  btnRemoveImage?.addEventListener("click", () => {
-    if (inputDishFile) inputDishFile.value = "";
-    if (inputDishImageData) inputDishImageData.value = "";
-    dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
-    if (btnRemoveImage) btnRemoveImage.style.display = "none";
-    if (fileNameHint) fileNameHint.textContent = "支援 JPG、PNG、WebP，系統將自動進行輕量縮圖最佳化";
-    showToast("已清除自訂圖片。");
   });
 
   const renderMenuList = () => {
@@ -1385,20 +1318,10 @@ document.addEventListener("DOMContentLoaded", () => {
           inputDishName.value = targetDish.name;
           inputDishPrice.value = targetDish.price;
           inputDishDesc.value = targetDish.desc;
-          if (targetDish.image) {
-            inputDishImageData.value = targetDish.image;
-            dishPreviewWrap.innerHTML = `<img src="${escapeHtml(targetDish.image)}" alt="預覽" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" onerror="this.parentElement.innerHTML='🍱';">`;
-            if (btnRemoveImage) btnRemoveImage.style.display = "inline-block";
-            if (fileNameHint) fileNameHint.textContent = "目前已使用自訂餐點圖片（點擊按鈕可更換）";
-          } else {
-            inputDishImageData.value = "";
-            dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
-            if (btnRemoveImage) btnRemoveImage.style.display = "none";
-            if (fileNameHint) fileNameHint.textContent = "未上傳圖片（將套用預設美味圖示）";
-          }
+          inputDishImage.value = targetDish.image;
           editingSpecGroups = targetDish.specGroups ? JSON.parse(JSON.stringify(targetDish.specGroups)) : [];
-          if (inputDishFile) inputDishFile.value = "";
-
+          dishPreviewWrap.innerHTML = `<img src="${escapeHtml(targetDish.image)}" alt="預覽" onerror="this.parentElement.innerHTML='🍱';">`;
+          
           renderSpecGroupsBuilder();
           menuFormHeading.textContent = `編輯餐點：${targetDish.name}`;
           btnSubmitDish.textContent = "儲存規格與餐點修改";
@@ -1434,13 +1357,6 @@ document.addEventListener("DOMContentLoaded", () => {
     formDishEditor.reset();
     inputEditDishId.value = "";
     editingSpecGroups = JSON.parse(JSON.stringify(TEMPLATE_BENTO));
-    if (inputDishFile) inputDishFile.value = "";
-    if (inputDishImageData) inputDishImageData.value = "";
-    dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
-    if (btnRemoveImage) btnRemoveImage.style.display = "none";
-    if (fileNameHint) fileNameHint.textContent = "支援 JPG、PNG、WebP，系統將自動進行輕量縮圖最佳化";
-    
-    renderSpecGroupsBuilder();
     dishPreviewWrap.innerHTML = `<span class="preview-placeholder">🍱</span>`;
     renderSpecGroupsBuilder();
     menuFormHeading.textContent = "新增餐點";
@@ -1454,7 +1370,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = inputDishName.value.trim();
     const price = parseInt(inputDishPrice.value, 10);
     const desc = inputDishDesc.value.trim();
-    const image = inputDishImageData.value.trim() || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";    const editId = inputEditDishId.value.trim();
+    const image = inputDishImage.value.trim() || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80";
+    const editId = inputEditDishId.value.trim();
 
     if (!name || isNaN(price) || price <= 0 || !desc) {
       dishFormError.style.display = "block";
@@ -1667,17 +1584,10 @@ document.addEventListener("DOMContentLoaded", () => {
   btnLogout?.addEventListener("click", () => {
     if (confirm("確定要登出商家管理中心嗎？")) {
       persistCurrentState();
-      // 撤銷本階段的店家進場通行憑證
-      sessionStorage.removeItem("laipower_partner_authorized");
       sectionDashboard.style.display = "none";
       sectionAuth.style.display = "block";
       if (authLoginError) authLoginError.style.display = "none";
       if (authRegError) authRegError.style.display = "none";
-      showToast("已成功登出商家管理中心。");
-      // 安全導航回首頁
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 500);
     }
   });
 
@@ -1747,21 +1657,100 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // -------------------------------------------------------------------------
+  // 供餐設定：下拉選單輔助（舊資料不在選項內時自動補選項，避免值遺失）
+  // -------------------------------------------------------------------------
+  const ensureSelectValue = (selectEl, value, labelFn) => {
+    if (!selectEl) return;
+    const strVal = String(value);
+    const exists = Array.from(selectEl.options).some((o) => o.value === strVal);
+
+    if (!exists) {
+      const newOpt = document.createElement("option");
+      newOpt.value = strVal;
+      newOpt.textContent = labelFn(Number(value));
+
+      // 依數值大小插入到正確位置，保持選單排序
+      const insertBefore = Array.from(selectEl.options).find((o) => Number(o.value) > Number(value));
+      if (insertBefore) {
+        selectEl.insertBefore(newOpt, insertBefore);
+      } else {
+        selectEl.appendChild(newOpt);
+      }
+    }
+    selectEl.value = strVal;
+  };
+
+  const capacityLabel = (n) => `${n} 份`;
+  const deliveryLabel = (n) => (n === 0 ? "不設門檻" : `NT$ ${n}`);
+
+  // 階梯贈品下拉：選到「自訂內容…」才顯示輸入框（僅畫面互動）
+  const toggleTierGiftCustom = (pair) => {
+    if (!pair.select || !pair.custom) return;
+    const isCustom = (pair.select.value === "__custom__");
+    pair.custom.style.display = isCustom ? "block" : "none";
+    if (isCustom) pair.custom.focus();
+  };
+
+  tierGiftSelects.forEach((pair) => {
+    pair.select?.addEventListener("change", () => toggleTierGiftCustom(pair));
+  });
+
+  // 時間驗證：停止時間必須晚於開始時間
+  const showTimeError = (msg) => {
+    if (!settingsTimeError) return;
+    settingsTimeError.textContent = msg;
+    settingsTimeError.style.display = "block";
+  };
+
+  const clearTimeError = () => {
+    if (!settingsTimeError) return;
+    settingsTimeError.textContent = "";
+    settingsTimeError.style.display = "none";
+  };
+
+  setStartTime?.addEventListener("input", clearTimeError);
+  setStopTime?.addEventListener("input", clearTimeError);
+
   // 供餐設定表單儲存
   const renderSettingsForm = () => {
+    clearTimeError();
     setStartTime.value = storeState.startTime;
     setStopTime.value = storeState.stopTime;
-    setCapacityThreshold.value = storeState.capacityThreshold;
-    setDeliveryThreshold.value = storeState.deliveryThreshold;
+    ensureSelectValue(setCapacityThreshold, storeState.capacityThreshold, capacityLabel);
+    ensureSelectValue(setDeliveryThreshold, storeState.deliveryThreshold, deliveryLabel);
     displayOperatingHours.textContent = `上午 ${storeState.startTime} - 下午 ${storeState.stopTime}`;
   };
 
   formSettings?.addEventListener("submit", (e) => {
     e.preventDefault();
-    storeState.startTime = setStartTime.value;
-    storeState.stopTime = setStopTime.value;
-    storeState.capacityThreshold = parseInt(setCapacityThreshold.value, 10) || 50;
-    storeState.deliveryThreshold = parseInt(setDeliveryThreshold.value, 10) || 300;
+
+    // 時間驗證
+    const startVal = setStartTime.value;
+    const stopVal = setStopTime.value;
+
+    if (!startVal || !stopVal) {
+      showTimeError("請完整設定自動開始與停止接單時間！");
+      (startVal ? setStopTime : setStartTime).focus();
+      return;
+    }
+
+    if (stopVal <= startVal) {
+      showTimeError("停止接單時間必須晚於開始接單時間，請重新調整！");
+      setStopTime.focus();
+      return;
+    }
+
+    clearTimeError();
+
+    storeState.startTime = startVal;
+    storeState.stopTime = stopVal;
+
+    // 注意：起送門檻可為 0（不設門檻），不可用 || 預設值，否則 0 會被誤判成 300
+    const capacityVal = parseInt(setCapacityThreshold.value, 10);
+    const deliveryVal = parseInt(setDeliveryThreshold.value, 10);
+    storeState.capacityThreshold = isNaN(capacityVal) ? 50 : capacityVal;
+    storeState.deliveryThreshold = isNaN(deliveryVal) ? 300 : deliveryVal;
 
     // 新店家完成設定，正式解鎖開張！
     if (storeState.isOnboarding && storeState.onboardingStep === 3) {
