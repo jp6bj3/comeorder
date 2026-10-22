@@ -7,7 +7,7 @@
    4. 主辦人後台 (host.html)：發起開團、進度時間軸軌道、湊單階梯、明細/廚房分頁、現場收款核對
    5. 商家管理後台 (merchant.html)：雙軌沙盒指引、開店導引精靈、排程出餐條列、歷史訂單歸檔、規格分組建造
    6. 全站多階斷點響應式設計 (RWD: 960px, 820px, 768px, 640px, 480px)
-   風格調性：溫暖餐廳風（奶油米白、森林墨綠、暖陶土橘、柔和暖金）
+   風格調性：沉穩、簡約、有質感（焦糖棕、拿鐵米、奶油米、咖啡黑）
    ========================================================================== */
 
 /* ==========================================================================
@@ -15,25 +15,21 @@
    ========================================================================== */
 :root {
   /* 品牌核心色彩 */
-  --color-primary: #183B2B;        /* 墨綠色/深森林綠（沉穩、品質、信賴） */
-  --color-primary-light: #2A5A44;  /* 森林綠 Hover 淺色 */
-  --color-accent: #D96B43;         /* 暖陶土橘（食慾感、焦點操作按鈕） */
-  --color-accent-hover: #BF5732;   /* 陶土橘 Hover 深色 */
-  --color-warm-gold: #E5A93C;      /* 柔和金黃/暖麥黃 */
-  --color-gold-bg: #FDF4E5;        /* 暖金淺底色 */
+  --color-primary: #75899A;        /* 主色：霧霾藍 */
+  --color-primary-light: #8A9CAE;  /* 主色 Hover：霧霾藍稍淺色，增加點擊回饋感 */
+  --color-accent: #C98268;         /* 輔色/焦點色：陶土橘 */
+  --color-accent-hover: #B57158;   /* 輔色 Hover：陶土橘稍深色 */
+  --color-warm-gold: #D4A373;      /* 暖金色：(配合燕麥米微調的輔助色) */
+  --color-gold-bg: #F3EBE1;        /* 暖金淺底色：(配合燕麥米微調) */
 
   /* 中性背景與文字色彩 */
-  --color-bg: #FAF8F5;             /* 奶油米白底色 */
-  --color-card-bg: #FFFFFF;        /* 純白卡片底色 */
-  --color-text-main: #243028;      /* 主要內文（深墨黑綠） */
-  --color-text-muted: #5C6B64;     /* 次要說明（橄欖灰綠） */
-  --color-text-light: #7A8780;     /* 輔助淺灰 */
-  --color-border: #E8E2D8;         /* 柔和溫暖邊線 */
-  --color-border-focus: #D96B43;   /* 聚焦邊線 */
-  --color-error: #D03D3D;          /* 錯誤警示紅 */
-  --color-error-bg: #FDF0F0;       /* 錯誤提示背景 */
-  --color-success: #2E7D32;        /* 成功綠色 */
-  --color-success-bg: #EAF5EB;     /* 成功淺底色 */
+  --color-bg: #E9E1D6;             /* 網頁整體底色：燕麥米 */
+  --color-card-bg: #FFFFFF;        /* 卡片底色：建議保持純白(或極淡米白 #FCFAF8)，以凸顯卡片內容 */
+  --color-text-main: #494743;      /* 主要內文字體：石墨灰 */
+  --color-text-muted: #73706A;     /* 次要說明文字：石墨灰調淺 */
+  --color-text-light: #9A9791;     /* 輔助淺灰色 */
+  --color-border: #D8CEBE;         /* 邊線顏色：燕麥米調深，讓分隔線柔和自然 */
+  --color-border-focus: #C98268;   /* 表單聚焦邊線：對應輔色陶土橘 */
 
   /* 字體家族 */
   --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
