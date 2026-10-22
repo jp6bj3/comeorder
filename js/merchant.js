@@ -1577,10 +1577,17 @@ document.addEventListener("DOMContentLoaded", () => {
   btnLogout?.addEventListener("click", () => {
     if (confirm("確定要登出商家管理中心嗎？")) {
       persistCurrentState();
+      // 撤銷本階段的店家進場通行憑證
+      sessionStorage.removeItem("laipower_partner_authorized");
       sectionDashboard.style.display = "none";
       sectionAuth.style.display = "block";
       if (authLoginError) authLoginError.style.display = "none";
       if (authRegError) authRegError.style.display = "none";
+      showToast("已成功登出商家管理中心。");
+      // 安全導航回首頁
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 500);
     }
   });
 

@@ -5,6 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="來電送 - 合作商家管理後台。依訂單順序排程製作、歷史訂單歸檔、菜單客製化規格設定與供餐門檻控制。">
   <title>商家管理中心｜來電送 - 店內價，一起訂更便宜</title>
+
+  <!-- ==================== 守門員存取防護（禁止一般使用者直接進入） ==================== -->
+  <script>
+    (function () {
+      "use strict";
+      // 專屬店家進場金鑰：可自訂，預設為 partner
+      const PORTAL_SECRET = "partner";
+      const AUTH_KEY = "laipower_partner_authorized";
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const incomingKey = urlParams.get("portal") || urlParams.get("auth");
+
+      // 檢查是否帶有正確通行鑰匙，或在同一瀏覽器 Session 中已驗證
+      const hasValidKey = (incomingKey === PORTAL_SECRET);
+      const isAlreadyAuthed = (sessionStorage.getItem(AUTH_KEY) === "true");
+
+      if (hasValidKey || isAlreadyAuthed) {
+        // 通行證有效，記錄於 Session
+        sessionStorage.setItem(AUTH_KEY, "true");
+        // 自動抹除網址列中的 ?portal=partner 參數，避免螢幕或網址被旁人看到
+        if (incomingKey) {
+          const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+          window.history.replaceState({ path: cleanUrl }, document.title, cleanUrl);
+        }
+      } else {
+        // 未授權的訪客直接輸入網址：立即阻斷並轉回首頁
+        alert("⚠️ 此頁面為合作店家專屬管理後台，未經授權無法直接進入！系統將為您導回首頁。");
+        window.location.replace("index.html");
+      }
+    })();
+  </script>
+
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/merchant.css">
@@ -136,7 +168,7 @@
       <!-- ================= 狀態 B：商家管理中心主控台 (登入後顯示) ================= -->
       <div id="section-merchant-dashboard" class="merchant-dashboard-view" style="display: none;">
 
-        <!-- 新店家開店導引進度橫幅（僅在新店家註冊流程顯示） -->
+        <!-- 新店家開店導引進度橫幅 -->
         <section id="merchant-onboarding-banner" class="card-box onboarding-banner" style="display: none;" aria-label="新店家開店導引">
           <div class="onboarding-header">
             <div class="onboarding-title-group">
@@ -271,10 +303,7 @@
             </div>
           </div>
 
-          <!-- 逐單排程卡片容器 -->
-          <div class="order-queue-stream" id="order-queue-stream">
-            <!-- 由 JS 動態注入進行中的訂單卡片 -->
-          </div>
+          <div class="order-queue-stream" id="order-queue-stream"></div>
         </section>
 
         <!-- ================= 分頁 2：歷史訂單歸檔清單 ================= -->
@@ -291,10 +320,7 @@
             </div>
           </div>
 
-          <!-- 歷史訂單卡片容器 -->
-          <div class="order-queue-stream" id="history-orders-stream">
-            <!-- 由 JS 動態注入已完成的歷史訂單卡片 -->
-          </div>
+          <div class="order-queue-stream" id="history-orders-stream"></div>
         </section>
 
         <!-- ================= 分頁 3：餐點新增與菜單管理 ================= -->
@@ -482,7 +508,7 @@
     </div>
   </main>
 
-  <!-- ================= 彈窗：您有新訂單即時推播通知 ================= -->
+  <!-- 彈窗：新訂單即時推播通知 -->
   <div class="modal-overlay" id="modal-incoming-order" aria-hidden="true" role="dialog" aria-labelledby="incoming-order-title">
     <div class="modal-box modal-box--order-alert">
       <div class="order-alert-header">
@@ -531,7 +557,7 @@
         <span>合作商家管理後台</span>
       </div>
       <p class="footer-copyright">
-        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 原型展示・免平台抽成・店家自送不碰金流[cite: 1]
+        程式驅動協會 專案指導 &copy; 2026 來電送 (LaiPower Food) 原型展示・免平台抽成・店家自送不碰金流
       </p>
     </div>
   </footer>
